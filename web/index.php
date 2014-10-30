@@ -129,27 +129,7 @@ $app->get('/ultimate', function () use ($app) {
   <body>
     <center>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
-    <div id="table_div">
-<tr>
-<td>Josephin Tan</td>
-<td>$150</td>
-<td>-</td>
-<td>Annie</td>
-</tr>
-<tr>
-<td>Joyce Ming</td>
-<td>$200</td>
-<td>$35</td>
-<td>Andy</td>
-</tr>
-<tr>
-<td>James A. Pentel</td>
-<td>$175</td>
-<td>$25</td>
-<td>Annie</td>
-</tr>
-</tbody>
-</table>
+    <div id="table_div" style="position: relative; top: 160px"></div>
 </center>
   </body>
 </html>
