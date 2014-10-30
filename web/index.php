@@ -48,6 +48,17 @@ $app->get('/ultimate', function () use ($app) {
   <link rel="stylesheet" href="http://www.smashingmagazine.com/wp-content/themes/smashing-magazine/stylesheets/main.min.css?ver=2014.15.0">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <style>
+    #hor-minimalist-a {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+        background: #fff;
+        width: 480px;
+        border-collapse: collapse;
+        text-align: left;
+        margin: 20px;
+    }
+    </style>
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["gauge"]});
         function drawChart(accepted) {
