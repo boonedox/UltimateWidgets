@@ -101,7 +101,7 @@ $app->get('/ultimate', function () use ($app) {
         }
         function drawTable(data) {
             var html = '<br>Last calendar update: '+ data.last_update + '<br>';
-            var html = 'Last refresh: '+ data.last_refresh + '<br>';
+            html += 'Last refresh: '+ data.last_refresh + '<br>';
             html += '<table cellspacing=2 id="hor-minimalist-a" summary="Employee Pay Sheet">';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
             html += '<th scope="col">Tentative</th>';
