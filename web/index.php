@@ -17,6 +17,9 @@ function getData()
     $stats['maybe'] = $sheetData[3]['B'];
     $stats['declined'] = $sheetData[4]['B'];
     $stats['pending'] = $sheetData[5]['B'];
+    $stats['people']['accepted'] = array();
+    $stats['people']['maybe'] = array();
+    $stats['people']['declined'] = array();
     for ($x = 8; $x <= count($sheetData); $x++) {
         if (!empty($sheetData[$x]['A'])) {
             $stats['people']['accepted'][] = $sheetData[$x]['A'];
@@ -28,6 +31,11 @@ function getData()
             $stats['people']['declined'][] = $sheetData[$x]['C'];
         }
     }
+    $stats['people']['total'] = max(
+        count($stats['people']['accepted']),
+        count($stats['people']['maybe']),
+        count($stats['people']['declined'])
+    );
     return json_encode($stats);
 }
 $app = new Silex\Application();
@@ -85,9 +93,32 @@ $app->get('/ultimate', function () use ($app) {
         function fetchData() {
             $.get('ultimate_data', function(data) {
                 drawChart(data.accepted);
+                drawTable(data);
                 setTimeout(fetchData, 60000);
             },
             'json');
+        }
+        function drawTable(data) {
+            var html = '<table id="hor-minimalist-a" summary="Employee Pay Sheet">';
+            html += '<thead> <tr> <th scope="col">Accepted</th>';
+            html += '<th scope="col">Tentative</th>';
+            html += '<th scope="col">Declined</th>';
+            html += '</tr> </thead> <tbody>';
+            var a = '';
+            var t = '';
+            var d = '';
+            for (var i = 0; i < data.people.total; i++) {
+                a = data.people.accepted.length > i ? data.people.accepted[i] : '';
+                t = data.people.maybe.length > i ? data.people.maybe[i] : '';
+                d = data.people.declined.length > i ? data.people.declined[i] : '';
+                html += '<tr>';
+                html += '<td>' + a + '</td>';
+                html += '<td>' + t + '</td>';
+                html += '<td>' + d + '</td>';
+                html += '</tr>';
+                html += '</tbody></table>';
+            }
+            $('#table_div').html(html);
         }
         $(document).ready(function() {
             drawChart(0);
@@ -96,23 +127,9 @@ $app->get('/ultimate', function () use ($app) {
     </script>
   </head>
   <body>
+    <center>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
-    <table id="hor-minimalist-a" summary="Employee Pay Sheet">
-<thead>
-<tr>
-<th scope="col">Employee</th>
-<th scope="col">Salary</th>
-<th scope="col">Bonus</th>
-<th scope="col">Supervisor</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Stephen C. Cox</td>
-<td>$300</td>
-<td>$50</td>
-<td>Bob</td>
-</tr>
+    <div id="table_div">
 <tr>
 <td>Josephin Tan</td>
 <td>$150</td>
@@ -133,6 +150,7 @@ $app->get('/ultimate', function () use ($app) {
 </tr>
 </tbody>
 </table>
+</center>
   </body>
 </html>
 HTML;
