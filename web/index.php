@@ -77,7 +77,7 @@ $app->get('/ultimate', function () use ($app) {
             ]);
 
             var options = {
-                width: 800, height: 400,
+                width: 300, height: 300,
                 redFrom: 0, redTo: 4,
                 yellowFrom:4, yellowTo: 6,
                 greenFrom:6, greenTo: 20,
@@ -116,8 +116,8 @@ $app->get('/ultimate', function () use ($app) {
                 html += '<td>' + t + '</td>';
                 html += '<td>' + d + '</td>';
                 html += '</tr>';
-                html += '</tbody></table>';
             }
+            html += '</tbody></table>';
             $('#table_div').html(html);
         }
         $(document).ready(function() {
