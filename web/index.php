@@ -94,7 +94,7 @@ $app->get('/ultimate', function () use ($app) {
             $.get('ultimate_data', function(data) {
                 drawChart(data.accepted);
                 drawTable(data);
-                setTimeout(fetchData, 60000);
+                setTimeout(fetchData, 10000);
             },
             'json');
         }
