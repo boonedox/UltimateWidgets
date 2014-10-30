@@ -45,6 +45,7 @@ $app->get('/ultimate', function () use ($app) {
     $html =<<<HTML
 <html>
   <head>
+  <link rel="stylesheet" href="http://www.smashingmagazine.com/wp-content/themes/smashing-magazine/stylesheets/main.min.css?ver=2014.15.0">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -85,6 +86,42 @@ $app->get('/ultimate', function () use ($app) {
   </head>
   <body>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
+    <table id="hor-minimalist-a" summary="Employee Pay Sheet">
+<thead>
+<tr>
+<th scope="col">Employee</th>
+<th scope="col">Salary</th>
+<th scope="col">Bonus</th>
+<th scope="col">Supervisor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stephen C. Cox</td>
+<td>$300</td>
+<td>$50</td>
+<td>Bob</td>
+</tr>
+<tr>
+<td>Josephin Tan</td>
+<td>$150</td>
+<td>-</td>
+<td>Annie</td>
+</tr>
+<tr>
+<td>Joyce Ming</td>
+<td>$200</td>
+<td>$35</td>
+<td>Andy</td>
+</tr>
+<tr>
+<td>James A. Pentel</td>
+<td>$175</td>
+<td>$25</td>
+<td>Annie</td>
+</tr>
+</tbody>
+</table>
   </body>
 </html>
 HTML;
