@@ -61,7 +61,8 @@ $app->get('/ultimate', function () use ($app) {
         font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
         font-size: 12px;
         background: #fff;
-        width: 480px;
+        /*width: 480px;*/
+        padding: 3px;
         border-collapse: collapse;
         text-align: left;
         margin: 20px;
