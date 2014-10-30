@@ -70,14 +70,17 @@ $app->get('/ultimate', function () use ($app) {
 
             chart.draw(data, options);
         }
-
-        $(document).ready(function() {
-            drawChart(0);
+        function fetchData() {
             $.get('ultimate_data', function(data) {
                 alert(data);
                 drawChart(data.accepted);
+                setTimeout(fetchData, 60000);
             },
             'json');
+        }
+        $(document).ready(function() {
+            drawChart(0);
+            fetchData();
         });
     </script>
   </head>
