@@ -53,8 +53,10 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 $app->get('/ultimate', function () use ($app) {
     $app['monolog']->addDebug('logging output.');
     $html =<<<HTML
+<!DOCTYPE html>
 <html>
   <head>
+  <title id="page_title">Novell Ultimate</title>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <style>
