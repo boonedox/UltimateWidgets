@@ -14,7 +14,12 @@ function getData()
 
     $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
     $stats['accepted'] = $sheetData[2]['B'];
-    $stats['last_update'] = date('M jS, g:ia', strtotime($sheetData[2]['C']));
+    $ts = strtotime($sheetData[2]['C']);
+
+    if ($ts < strtotime(date('Y-m-d'))) {
+        return null;
+    }
+    $stats['last_update'] = date('M jS, g:ia', $ts);
     $stats['last_refresh'] = date('M jS, g:ia');
     $stats['maybe'] = $sheetData[3]['B'];
     $stats['declined'] = $sheetData[4]['B'];
@@ -100,9 +105,19 @@ $app->get('/ultimate', function () use ($app) {
         }
         function fetchData() {
             $.get('ultimate_data', function(data) {
+                if (!data || data == null || !data.accepted) {
+                    data = {
+                        accepted: 0,
+                        people: {
+                            accepted: [],
+                            maybe: [],
+                            declined: []
+                        }
+                    };
+                }
                 drawChart(data.accepted);
                 drawTable(data);
-                setTimeout(fetchData, 10000);
+                setTimeout(fetchData, 60000);
             },
             'json');
         }
