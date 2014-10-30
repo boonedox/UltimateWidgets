@@ -99,7 +99,7 @@ $app->get('/ultimate', function () use ($app) {
             'json');
         }
         function drawTable(data) {
-            var html = 'Last update: '+ data.last_update + '<br><br>';
+            var html = '<br>Last update: '+ data.last_update + '<br>';
             html += '<table cellspacing=2 id="hor-minimalist-a" summary="Employee Pay Sheet">';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
             html += '<th scope="col">Tentative</th>';
