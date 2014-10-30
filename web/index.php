@@ -1,4 +1,5 @@
 <?php
+ini_set('date.time_zone', 'America/Denver');
 require('../vendor/autoload.php');
 
 function getData()
