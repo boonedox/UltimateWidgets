@@ -49,38 +49,37 @@ $app->get('/ultimate', function () use ($app) {
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript">
-      google.load("visualization", "1", {packages:["gauge"]});
-      function drawChart(data) {
-        data = 0;
+        google.load("visualization", "1", {packages:["gauge"]});
+        function drawChart(data) {
+            data = 0;
 
-        var data = google.visualization.arrayToDataTable([
-          ['Label', 'Value'],
-          ['Accepted', 0]
-        ]);
+            var data = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['Accepted', 0]
+            ]);
 
-        var options = {
-          width: 800, height: 400,
-          redFrom: 0, redTo: 4,
-          yellowFrom:4, yellowTo: 6,
-          greenFrom:6, greenTo: 20,
-          minorTicks: 6,
-          max: 20,
-          min: 0
-        };
+            var options = {
+                width: 800, height: 400,
+                redFrom: 0, redTo: 4,
+                yellowFrom:4, yellowTo: 6,
+                greenFrom:6, greenTo: 20,
+                minorTicks: 6,
+                max: 20,
+                min: 0
+            };
 
-        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+            var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
 
-        chart.draw(data, options);
-      }
-        
+            chart.draw(data, options);
+        }
 
-      });
-      $(document).ready(function() {
-        drawChart(0);
-        $.get('ultimate_data', function(data) {
-          alert(data);
-        },
-        'json');
+        $(document).ready(function() {
+            drawChart(0);
+            $.get('ultimate_data', function(data) {
+                alert(data);
+            },
+            'json');
+        });
     </script>
   </head>
   <body>
