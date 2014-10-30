@@ -1,7 +1,9 @@
 <?php
 exit;
 require('../vendor/autoload.php');
-function getData() {
+
+function getData()
+{
     $url = 'https://sc7acq-ch3301.files.1drv.com/y2mFNc5dptk-Z6-mZx2NPkDn5Z4BnjtcxOmSg2yAkMkD-IdOzfdZuPem0tz2NEBYZGNnbfIaXkRb7a6E9RKgtx5ZlhnIZJfrYzGsrWrR4ImFt-XAoqAG6DInCnSYgO3irpv/attendingDisc.xlsx?download&psid=1';
     $url = '../attendingDisc.xlsx';
     $data = file_get_contents($url);
@@ -10,22 +12,22 @@ function getData() {
     file_put_contents($inputFileName, $data);
     $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 
-    $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+    $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
     $stats['accepted'] = $sheetData[2]['B'];
     $stats['last_update'] = date('Y-m-d H:i:s', strtotime($sheetData[2]['C']));
     $stats['maybe'] = $sheetData[3]['B'];
     $stats['declined'] = $sheetData[4]['B'];
     $stats['pending'] = $sheetData[5]['B'];
     for ($x = 8; $x <= count($sheetData); $x++) {
-      if (!empty($sheetData[$x]['A'])) {
-        $stats['people']['accepted'][] = $sheetData[$x]['A'];
-      }
-      if (!empty($sheetData[$x]['B'])) {
-        $stats['people']['maybe'][] = $sheetData[$x]['B'];
-      }
-      if (!empty($sheetData[$x]['C'])) {
-        $stats['people']['declined'][] = $sheetData[$x]['C'];
-      }
+        if (!empty($sheetData[$x]['A'])) {
+            $stats['people']['accepted'][] = $sheetData[$x]['A'];
+        }
+        if (!empty($sheetData[$x]['B'])) {
+            $stats['people']['maybe'][] = $sheetData[$x]['B'];
+        }
+        if (!empty($sheetData[$x]['C'])) {
+            $stats['people']['declined'][] = $sheetData[$x]['C'];
+        }
     }
     return json_encode($stats);
 }
@@ -39,7 +41,7 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 
 // Our web handlers
 
-$app->get('/ultimate', function() use($app) {
+$app->get('/ultimate', function () use ($app) {
     $app['monolog']->addDebug('logging output.');
     $html =<<<HTML
 <html>
@@ -48,19 +50,19 @@ $app->get('/ultimate', function() use($app) {
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["gauge"]});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
+      function drawChart(data) {
+        data = 0;
 
         var data = google.visualization.arrayToDataTable([
           ['Label', 'Value'],
-          ['Accepted', 7]
+          ['Accepted', 0]
         ]);
 
         var options = {
           width: 800, height: 400,
-          redFrom: 0, redTo: 25,
-          yellowFrom:25, yellowTo: 50,
-          greenFrom:50, greenTo: 100,
+          redFrom: 0, redTo: 4,
+          yellowFrom:4, yellowTo: 6,
+          greenFrom:6, greenTo: 20,
           minorTicks: 6,
           max: 20,
           min: 0
@@ -69,28 +71,16 @@ $app->get('/ultimate', function() use($app) {
         var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
 
         chart.draw(data, options);
-
-        setInterval(function() {
-          data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
-          chart.draw(data, options);
-        }, 13000);
-        setInterval(function() {
-          data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
-          chart.draw(data, options);
-        }, 5000);
-        setInterval(function() {
-          data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
-          chart.draw(data, options);
-        }, 26000);
       }
+        
+
+      });
       $(document).ready(function() {
+        drawChart(0);
         $.get('ultimate_data', function(data) {
           alert(data);
         },
         'json');
-        
-
-      });
     </script>
   </head>
   <body>
@@ -99,14 +89,12 @@ $app->get('/ultimate', function() use($app) {
 </html>
 HTML;
 });
-$app->get('/ultimate_data', function() use($app) {
+$app->get('/ultimate_data', function () use ($app) {
     return getData();
-  });
-$app->get('/', function() use($app) {
-  $app['monolog']->addDebug('logging output.');
-  return 'Hello';
+});
+$app->get('/', function () use ($app) {
+    $app['monolog']->addDebug('logging output.');
+    return 'Hello';
 });
 
 $app->run();
-
-?>
