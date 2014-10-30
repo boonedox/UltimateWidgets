@@ -14,6 +14,7 @@ function getData()
     $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
     $stats['accepted'] = $sheetData[2]['B'];
     $stats['last_update'] = date('M jS, g:ia', strtotime($sheetData[2]['C']));
+    $stats['last_refresh'] = date('M jS, g:ia');
     $stats['maybe'] = $sheetData[3]['B'];
     $stats['declined'] = $sheetData[4]['B'];
     $stats['pending'] = $sheetData[5]['B'];
@@ -99,7 +100,8 @@ $app->get('/ultimate', function () use ($app) {
             'json');
         }
         function drawTable(data) {
-            var html = '<br>Last update: '+ data.last_update + '<br>';
+            var html = '<br>Last calendar update: '+ data.last_update + '<br>';
+            var html = 'Last refresh: '+ data.last_refresh + '<br>';
             html += '<table cellspacing=2 id="hor-minimalist-a" summary="Employee Pay Sheet">';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
             html += '<th scope="col">Tentative</th>';
