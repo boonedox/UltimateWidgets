@@ -105,7 +105,7 @@ $app->get('/ultimate', function () use ($app) {
             'json');
         }
         function drawTable(data) {
-            var html = '<br><b>Last calendar update</b>: '+ data.last_update + '<br>';
+            var html = '<br><b>Last calendar update</b>: '+ data.last_update + ' -- ';
             html += '<b>Last refresh</b>: '+ data.last_refresh + '<br>';
             html += '<table cellspacing=2 id="hor-minimalist-a" summary="Employee Pay Sheet">';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
