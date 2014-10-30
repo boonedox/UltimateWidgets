@@ -50,7 +50,6 @@ $app->get('/ultimate', function () use ($app) {
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["gauge"]});
         function drawChart(data) {
-            data = 0;
 
             var data = google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
@@ -76,7 +75,7 @@ $app->get('/ultimate', function () use ($app) {
             drawChart(0);
             $.get('ultimate_data', function(data) {
                 alert(data);
-                drawChart(data['accepted']);
+                drawChart(data.accepted);
             },
             'json');
         });
