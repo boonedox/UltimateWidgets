@@ -68,6 +68,10 @@ $app->get('/ultimate', function () use ($app) {
         text-align: left;
         margin: 20px;
     }
+    body {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+    }
     </style>
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["gauge"]});
@@ -101,8 +105,8 @@ $app->get('/ultimate', function () use ($app) {
             'json');
         }
         function drawTable(data) {
-            var html = '<br>Last calendar update: '+ data.last_update + '<br>';
-            html += 'Last refresh: '+ data.last_refresh + '<br>';
+            var html = '<br><b>Last calendar update</b>: '+ data.last_update + '<br>';
+            html += '<b>Last refresh</b>: '+ data.last_refresh + '<br>';
             html += '<table cellspacing=2 id="hor-minimalist-a" summary="Employee Pay Sheet">';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
             html += '<th scope="col">Tentative</th>';
