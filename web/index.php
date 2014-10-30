@@ -46,7 +46,7 @@ $app->get('/ultimate', function () use ($app) {
 <html>
   <head>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["gauge"]});
         function drawChart(data) {
