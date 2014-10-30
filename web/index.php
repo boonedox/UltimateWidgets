@@ -4,8 +4,6 @@ require('../vendor/autoload.php');
 
 function getData()
 {
-    //$url = 'https://sc7acq-ch3301.files.1drv.com/y2mFNc5dptk-Z6-mZx2NPkDn5Z4BnjtcxOmSg2yAkMkD-IdOzfdZuPem0tz2NEBYZGNnbfIaXkRb7a6E9RKgtx5ZlhnIZJfrYzGsrWrR4ImFt-XAoqAG6DInCnSYgO3irpv/attendingDisc.xlsx?download&psid=1';
-            //https://sc7acq-ch3301.files.1drv.com/y2mFMsOXDSaN3iVvvT7dA52quEuUtis-IWZv_bx9fu_D33b4nknKSYS1sOLEINoYAbiVsv6IMiTBR4xiBNj_9k-rk5o5XV_LWD12Nuo9xi-DoV4pU7KUQkXzRPIrj35dZLg/attendingDisc.xlsx?download&psid=1
     $url = 'https://onedrive.live.com/download.aspx?cid=fa17e0833ee4a1bf&id=documents&resid=FA17E0833EE4A1BF%212406&authkey=!AH0R1wo0FrQSf9Y';
     //$url = '../attendingDisc.xlsx';
     $data = file_get_contents($url);
@@ -64,7 +62,7 @@ $app->get('/ultimate', function () use ($app) {
         font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
         font-size: 12px;
         background: #fff;
-        /*width: 480px;*/
+        width: 400px;
         padding: 3px;
         border-collapse: collapse;
         text-align: left;
