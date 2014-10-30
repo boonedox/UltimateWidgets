@@ -72,7 +72,6 @@ $app->get('/ultimate', function () use ($app) {
         }
         function fetchData() {
             $.get('ultimate_data', function(data) {
-                alert(data);
                 drawChart(data.accepted);
                 setTimeout(fetchData, 60000);
             },
