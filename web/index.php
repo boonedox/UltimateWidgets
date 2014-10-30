@@ -94,7 +94,8 @@ $app->get('/ultimate', function () use ($app) {
                 redFrom: 0, redTo: 4,
                 yellowFrom:4, yellowTo: 6,
                 greenFrom:6, greenTo: 20,
-                minorTicks: 6,
+                minorTicks: 4,
+                majorTicks: 4,
                 max: 20,
                 min: 0
             };
