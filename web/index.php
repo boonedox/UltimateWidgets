@@ -13,7 +13,7 @@ function getData()
 
     $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
     $stats['accepted'] = $sheetData[2]['B'];
-    $stats['last_update'] = date('Y-m-d H:i:s', strtotime($sheetData[2]['C']));
+    $stats['last_update'] = date('M jS, g:ia', strtotime($sheetData[2]['C']));
     $stats['maybe'] = $sheetData[3]['B'];
     $stats['declined'] = $sheetData[4]['B'];
     $stats['pending'] = $sheetData[5]['B'];
@@ -53,7 +53,6 @@ $app->get('/ultimate', function () use ($app) {
     $html =<<<HTML
 <html>
   <head>
-  <link rel="stylesheet" href="http://www.smashingmagazine.com/wp-content/themes/smashing-magazine/stylesheets/main.min.css?ver=2014.15.0">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <style>
@@ -100,7 +99,8 @@ $app->get('/ultimate', function () use ($app) {
             'json');
         }
         function drawTable(data) {
-            var html = '<table id="hor-minimalist-a" summary="Employee Pay Sheet">';
+            var html = 'Last update: '+ data.last_update + '<br><br>';
+            html += '<table id="hor-minimalist-a" summary="Employee Pay Sheet">';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
             html += '<th scope="col">Tentative</th>';
             html += '<th scope="col">Declined</th>';
