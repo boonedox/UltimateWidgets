@@ -100,7 +100,7 @@ $app->get('/ultimate', function () use ($app) {
         }
         function drawTable(data) {
             var html = 'Last update: '+ data.last_update + '<br><br>';
-            html += '<table id="hor-minimalist-a" summary="Employee Pay Sheet">';
+            html += '<table cellspacing=2 id="hor-minimalist-a" summary="Employee Pay Sheet">';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
             html += '<th scope="col">Tentative</th>';
             html += '<th scope="col">Declined</th>';
