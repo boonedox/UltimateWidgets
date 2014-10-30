@@ -49,11 +49,11 @@ $app->get('/ultimate', function () use ($app) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["gauge"]});
-        function drawChart(data) {
+        function drawChart(accepted) {
 
             var data = google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
-                ['Accepted', 0]
+                ['Accepted', accepted]
             ]);
 
             var options = {
