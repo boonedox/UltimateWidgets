@@ -207,23 +207,32 @@ $app->get('/weather', function () use ($app) {
         google.load("visualization", "1", {packages:["corechart"]});
         function drawChart(data) {
             // Some raw data (not necessarily accurate)
-            var chart_data = [['Hour', 'Temperature', 'Precipitation']];
+            var chart_data = [];
             for (var i = 0; i < data.hourly_forecast.length; i++) {
                 var hour = data.hourly_forecast[i];
                 chart_data[chart_data.length] = [
                     hour.FCTTIME.civil,
-                    parseInt(hour.temp.english)/100,
-                    parseInt(hour.pop),
+                    parseInt(hour.temp.english),
+                    hour.FCTTIME.civil + "\n Temperature: " + , hour.temp.english + 'F (feels like ' + hour.feelslike.english + ')',
+                    parseInt(hour.pop)/100,
                     parseInt(hour.wspd.english)
                 ];
             }
-            var data = google.visualization.arrayToDataTable(chart_data);
+            //var data = google.visualization.arrayToDataTable(chart_data);
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Hour');
+            data.addColumn('number', 'Temp');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn('number', 'Precip %');
+            data.addColumn('number', 'Wind Speed');
+            data.addRows(chart_data);
+
             var options = {
                 title : 'Hourly Forecast',
                 vAxis: {title: "Temperature"},
                 vAxes: {
                     1: {title: "Precip", format: "#%"},
-                    2: {title: "Wind"}
+                    2: {title: "", textPosition: "none"}
                 },
                 hAxis: {title: "Hour"},
                 seriesType: "line",
