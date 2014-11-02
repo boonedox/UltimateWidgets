@@ -229,7 +229,7 @@ $app->get('/weather', function () use ($app) {
         }
         function fetchData() {
             $.get('weather_data?zip=84606', function(data) {
-                if (data && data.hourly_forecast) {
+                if (data == null || !data.hourly_forecast) {
                     data = {
                         hourly_forecast: []
                     };
