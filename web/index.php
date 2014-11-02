@@ -285,6 +285,7 @@ $app->get('/weather', function () use ($app) {
     <center>
     <div id="twelve" style="padding-left: 250px"></div>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
+    <div> <img src='http://icons.wxug.com/logos/JPG/wundergroundLogo_4c_horz.jpg'></div>
 </center>
   </body>
 </html>
