@@ -248,7 +248,7 @@ $app->get('/weather', function () use ($app) {
                 vAxis: {title: "Temperature"},
                 vAxes: {
                     1: {title: "Precip", format: "#%"},
-                    2: {title: "", textPosition: "none"}
+                    2: {title: "", textPosition: "none", viewWindow: {max: 40, min: 0}}
                 },
                 hAxis: {title: "Hour"},
                 seriesType: "line",
