@@ -208,7 +208,8 @@ $app->get('/weather', function () use ($app) {
         function drawChart(data) {
             // Some raw data (not necessarily accurate)
             var chart_data = [];
-            for (var i = 0; i < data.hourly_forecast.length; i++) {
+            //for (var i = 0; i < data.hourly_forecast.length; i++) {
+            for (var i = 0; i < 6; i++) {
                 var hour = data.hourly_forecast[i];
                 chart_data[chart_data.length] = [
                     hour.FCTTIME.civil,
@@ -229,6 +230,8 @@ $app->get('/weather', function () use ($app) {
 
             var options = {
                 title : 'Hourly Forecast',
+                height: 400,
+                width: 800,
                 vAxis: {title: "Temperature"},
                 vAxes: {
                     1: {title: "Precip", format: "#%"},
