@@ -214,14 +214,14 @@ $app->get('/weather', function () use ($app) {
                 if (hour.FCTTIME.hour == 12) {
                     $('#twelve').html(
                         "<img src='"+hour.icon_url+"'>" +
-                        "Expected weather @ 12 o'clock: " + hour.condition+"\\n "+hour.temp.english+'F (will feel like ' + hour.feelslike.english + ')'
+                        "Expected weather @ 12 o'clock: " + hour.condition+", "+hour.temp.english+'F (will feel like ' + hour.feelslike.english + 'F)'
                     );
                 }
                 if (i < 10) {
                     chart_data[chart_data.length] = [
                         hour.FCTTIME.civil,
                         parseInt(hour.temp.english),
-                        hour.FCTTIME.civil + "\\n Temperature: " + hour.temp.english + 'F (feels like ' + hour.feelslike.english + ')',
+                        hour.FCTTIME.civil + "\\n Temperature: " + hour.temp.english + 'F (feels like ' + hour.feelslike.english + 'F)',
                         parseInt(hour.pop)/100,
                         parseInt(hour.wspd.english)
                     ];
@@ -277,7 +277,7 @@ $app->get('/weather', function () use ($app) {
   </head>
   <body>
     <center>
-    <div id="twelve"></div>
+    <div id="twelve" style="padding-left: 250px"></div>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
 </center>
   </body>
