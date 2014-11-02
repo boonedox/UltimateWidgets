@@ -206,7 +206,7 @@ $app->get('/weather', function () use ($app) {
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["corechart"]});
         var chart_width = 800;
-        var chart_height = 400;
+        var chart_height = 250;
         var chart_data = [];
         var weather_data = {hourly_forecast: []};
 
