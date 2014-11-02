@@ -205,12 +205,17 @@ $app->get('/weather', function () use ($app) {
     </style>
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["corechart"]});
-        function drawChart(data) {
+        var chart_width = 800;
+        var chart_height = 400;
+        var chart_data = [];
+        var weather_data = {};
+
+        function drawChart() {
             // Some raw data (not necessarily accurate)
             var chart_data = [];
             //for (var i = 0; i < data.hourly_forecast.length; i++) {
-            for (var i = 0; i < data.hourly_forecast.length; i++) {
-                var hour = data.hourly_forecast[i];
+            for (var i = 0; i < weather_data.hourly_forecast.length; i++) {
+                var hour = weather_data.hourly_forecast[i];
                 if (hour.FCTTIME.hour == 12) {
                     $('#twelve').html(
                         "<img src='"+hour.icon_url+"'>" +
@@ -238,8 +243,8 @@ $app->get('/weather', function () use ($app) {
 
             var options = {
                 title : 'Hourly Forecast',
-                height: 400,
-                width: 800,
+                height: chart_height,
+                width: chart_width,
                 vAxis: {title: "Temperature"},
                 vAxes: {
                     1: {title: "Precip", format: "#%"},
@@ -264,13 +269,14 @@ $app->get('/weather', function () use ($app) {
                         hourly_forecast: []
                     };
                 }
-                drawChart(data);
+                weather_data = data;
+                drawChart();
                 setTimeout(fetchData, 60000);
             },
             'json');
         }
         $(document).ready(function() {
-            drawChart({hourly_forecast: []});
+            drawChart();
             fetchData();
         });
     </script>
