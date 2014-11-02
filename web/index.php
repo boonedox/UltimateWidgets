@@ -243,7 +243,7 @@ $app->get('/weather', function () use ($app) {
                     2: {targetAxisIndex: 2}
                 }
             };
-            var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
             chart.draw(data, options);
         }
         function fetchData() {
