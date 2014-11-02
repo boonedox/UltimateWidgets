@@ -216,6 +216,9 @@ $app->get('/weather', function () use ($app) {
             var options = {
                 title : 'Hourly Forecast',
                 vAxis: {title: "Temperature/Chance of Precipitation"},
+                vAxes: {
+                    1: {title: "Precip", format: "#%"}
+                },
                 hAxis: {title: "Hour"},
                 seriesType: "line",
                 curveType: "function",
