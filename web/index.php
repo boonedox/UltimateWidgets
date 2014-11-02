@@ -176,8 +176,83 @@ $app->get('/weather_data', function () use ($app) {
         $url = "http://api.wunderground.com/api/42efd44561264d34/hourly/q/{$zip}.json";
         file_put_contents($filename, file_get_contents($url));
     }
-    $json_string = file_get_contents($filename);
-    return $json_string;
+    return file_get_contents($filename);
+});
+$app->get('/weather', function () use ($app) {
+    $app['monolog']->addDebug('logging output.');
+    $html =<<<HTML
+<!DOCTYPE html>
+<html>
+  <head>
+  <title id="page_title">Novell Weather</title>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <style>
+    #hor-minimalist-a {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+        background: #fff;
+        width: 400px;
+        padding: 3px;
+        border-collapse: collapse;
+        text-align: left;
+        margin: 20px;
+    }
+    body {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+    }
+    </style>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["gauge"]});
+        function drawChart(data) {
+            // Some raw data (not necessarily accurate)
+            var chart_data = [['Hour', 'Temperature', 'Precipitation']];
+            for (var i = 0; i < data.hourly_forecast.length; i++) {
+                var hour = data.hourly_forecast[i];
+                chart_data[chart_data.length] = [hour.FCTTIME.civil, hour.temp.english, hour.pop];
+            }
+            var data = google.visualization.arrayToDataTable(chart_data);
+            var options = {
+                title : 'Hourly Forecast',
+                vAxis: {title: "Temperature/Chance of Precipitation"},
+                hAxis: {title: "Hour"},
+                seriesType: "line",
+                curveType: "function",
+                series: {
+                    0: {targetAxisIndex: 0},
+                    1: {targetAxisIndex: 1}
+                }
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+        function fetchData() {
+            $.get('weather_data', function(data) {
+                if (data && data.hourly_forecast) {
+                    data = {
+                        hourly_forecast: []
+                    };
+                }
+                drawChart(data);
+                setTimeout(fetchData, 60000);
+            },
+            'json');
+        }
+        $(document).ready(function() {
+            drawChart({hourly_forecast: []});
+            fetchData();
+        });
+    </script>
+  </head>
+  <body>
+    <center>
+    <div id="chart_div" style="width: 400px; height: 120px;"></div>
+</center>
+  </body>
+</html>
+HTML;
+    return $html;
 });
 
 $app->run();
