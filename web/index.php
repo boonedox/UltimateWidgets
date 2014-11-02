@@ -213,7 +213,7 @@ $app->get('/weather', function () use ($app) {
                 chart_data[chart_data.length] = [
                     hour.FCTTIME.civil,
                     parseInt(hour.temp.english),
-                    hour.FCTTIME.civil + "\n Temperature: " + hour.temp.english + 'F (feels like ' + hour.feelslike.english + ')',
+                    hour.FCTTIME.civil + "\\n Temperature: " + hour.temp.english + 'F (feels like ' + hour.feelslike.english + ')',
                     parseInt(hour.pop)/100,
                     parseInt(hour.wspd.english)
                 ];
