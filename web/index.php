@@ -208,7 +208,7 @@ $app->get('/weather', function () use ($app) {
         var chart_width = 800;
         var chart_height = 400;
         var chart_data = [];
-        var weather_data = {};
+        var weather_data = {hourly_forecast: []};
 
         function drawChart() {
             // Some raw data (not necessarily accurate)
