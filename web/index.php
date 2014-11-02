@@ -210,7 +210,7 @@ $app->get('/weather', function () use ($app) {
             var chart_data = [['Hour', 'Temperature', 'Precipitation']];
             for (var i = 0; i < data.hourly_forecast.length; i++) {
                 var hour = data.hourly_forecast[i];
-                chart_data[chart_data.length] = [hour.FCTTIME.civil, hour.temp.english, hour.pop];
+                chart_data[chart_data.length] = [hour.FCTTIME.civil, parseInt(hour.temp.english), parseInt(hour.pop)];
             }
             var data = google.visualization.arrayToDataTable(chart_data);
             var options = {
