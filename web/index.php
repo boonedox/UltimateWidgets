@@ -213,8 +213,8 @@ $app->get('/weather', function () use ($app) {
                 var hour = data.hourly_forecast[i];
                 if (hour.FCTTIME.hour == 12) {
                     $('#twelve').html(
-                        "Expected weather @ 12 o'clock:" + hour.condition+"\\n "+hour.temp.english+'F'+
-                        "<img src='"+hour.icon_url+"'>"
+                        "<img src='"+hour.icon_url+"'>" +
+                        "Expected weather @ 12 o'clock:" + hour.condition+"\\n "+hour.temp.english+'F (will feel like ' + hour.feelslike.english + ')'
                     );
                 }
                 if (i < 10) {
