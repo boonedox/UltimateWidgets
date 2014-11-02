@@ -247,7 +247,7 @@ $app->get('/weather', function () use ($app) {
                 width: chart_width,
                 vAxis: {title: "Temperature"},
                 vAxes: {
-                    1: {title: "Precip", format: "#%"},
+                    1: {title: "Precip", format: "#%", viewWindow: {max: 1, min: 0}},
                     2: {title: "", textPosition: "none", viewWindow: {max: 40, min: 0}}
                 },
                 hAxis: {title: "Hour"},
@@ -285,7 +285,7 @@ $app->get('/weather', function () use ($app) {
     <center>
     <div id="twelve" style="padding-left: 250px"></div>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
-    <div style="position: relative; top: 130px; left: -50px "> <a href="http://www.wunderground.com"> <img width="150px" src='http://icons.wxug.com/logos/JPG/wundergroundLogo_4c_horz.jpg' onclick="window.open('http://www.wunderground.com')"> </a></div>
+    <div style="position: relative; top: 130px; left: -50px "> <a href="http://www.wunderground.com" target="_blank"> <img width="150px" src='http://icons.wxug.com/logos/JPG/wundergroundLogo_4c_horz.jpg'> </a></div>
 </center>
   </body>
 </html>
