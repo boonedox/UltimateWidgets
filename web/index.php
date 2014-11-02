@@ -210,21 +210,28 @@ $app->get('/weather', function () use ($app) {
             var chart_data = [['Hour', 'Temperature', 'Precipitation']];
             for (var i = 0; i < data.hourly_forecast.length; i++) {
                 var hour = data.hourly_forecast[i];
-                chart_data[chart_data.length] = [hour.FCTTIME.civil, parseInt(hour.temp.english), parseInt(hour.pop)];
+                chart_data[chart_data.length] = [
+                    hour.FCTTIME.civil,
+                    parseInt(hour.temp.english)/100,
+                    parseInt(hour.pop),
+                    parseInt(hour.wspd.english)
+                ];
             }
             var data = google.visualization.arrayToDataTable(chart_data);
             var options = {
                 title : 'Hourly Forecast',
-                vAxis: {title: "Temperature/Chance of Precipitation"},
+                vAxis: {title: "Temperature"},
                 vAxes: {
-                    1: {title: "Precip", format: "#%"}
+                    1: {title: "Precip", format: "#%"},
+                    2: {title: "Wind"}
                 },
                 hAxis: {title: "Hour"},
                 seriesType: "line",
                 curveType: "function",
                 series: {
                     0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 1}
+                    1: {targetAxisIndex: 1},
+                    2: {targetAxisIndex: 2}
                 }
             };
             var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
