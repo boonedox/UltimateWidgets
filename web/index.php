@@ -204,7 +204,7 @@ $app->get('/weather', function () use ($app) {
     }
     </style>
     <script type="text/javascript">
-        google.load("visualization", "1", {packages:["gauge"]});
+        google.load("visualization", "1", {packages:["corechart"]});
         function drawChart(data) {
             // Some raw data (not necessarily accurate)
             var chart_data = [['Hour', 'Temperature', 'Precipitation']];
