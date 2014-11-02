@@ -214,7 +214,7 @@ $app->get('/weather', function () use ($app) {
                 if (hour.FCTTIME.hour == 12) {
                     $('#twelve').html(
                         "Expected weather @ 12 o'clock:" + hour.condition+"\\n "+hour.temp.english+'F'+
-                        "<img src='"+hour.icon_url+">'"
+                        "<img src='"+hour.icon_url+"'>"
                     );
                 }
                 if (i < 10) {
@@ -277,8 +277,8 @@ $app->get('/weather', function () use ($app) {
   </head>
   <body>
     <center>
+    <div id="twelve"></div>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
-    <div id="twelve" style="width: 400px; height: 120px;"></div>
 </center>
   </body>
 </html>
