@@ -219,7 +219,7 @@ $app->get('/weather', function () use ($app) {
                 if (hour.FCTTIME.hour == 12) {
                     $('#twelve').html(
                         "<img src='"+hour.icon_url+"'>" +
-                        "Expected weather @ 12 o'clock: " + hour.condition+", "+hour.temp.english+'F (will feel like ' + hour.feelslike.english + 'F)'
+                        "Expected weather @ 12 o'clock: " + hour.condition+", "+hour.temp.english+'&deg; (will feel like ' + hour.feelslike.english + '&deg;)'
                     );
                 }
                 if (i < 10) {
