@@ -209,7 +209,7 @@ $app->get('/weather', function () use ($app) {
             // Some raw data (not necessarily accurate)
             var chart_data = [];
             //for (var i = 0; i < data.hourly_forecast.length; i++) {
-            for (var i = 0; i < data.hourly_forecast.length && i < 6; i++) {
+            for (var i = 0; i < data.hourly_forecast.length && i < 10; i++) {
                 var hour = data.hourly_forecast[i];
                 chart_data[chart_data.length] = [
                     hour.FCTTIME.civil,
