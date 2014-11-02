@@ -169,5 +169,15 @@ $app->get('/', function () use ($app) {
     $app['monolog']->addDebug('logging output.');
     return 'Hello';
 });
+$app->get('/weather_data', function () use ($app) {
+    $zip = $_GET['zip'];
+    $filename = sys_get_temp_dir().'/weather'.$zip;
+    if (!file_exists($filename) || time() - filemtime($filename) > 600) {
+        $url = "http://api.wunderground.com/api/42efd44561264d34/hourly/q/{$zip}.json";
+        file_put_contents($filename, file_get_contents($url));
+    }
+    $json_string = file_get_contents($filename);
+    return $json_string;
+});
 
 $app->run();
