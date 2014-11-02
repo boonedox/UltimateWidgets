@@ -247,6 +247,7 @@ $app->get('/weather', function () use ($app) {
                 width: chart_width,
                 vAxis: {title: "Temperature"},
                 vAxes: {
+                    0: {format: "#°"},
                     1: {title: "Precip", format: "#%"},
                     2: {title: "", textPosition: "none", viewWindow: {max: 40, min: 0}}
                 },
