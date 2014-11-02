@@ -228,7 +228,7 @@ $app->get('/weather', function () use ($app) {
             chart.draw(data, options);
         }
         function fetchData() {
-            $.get('weather_data', function(data) {
+            $.get('weather_data?zip=84606', function(data) {
                 if (data && data.hourly_forecast) {
                     data = {
                         hourly_forecast: []
