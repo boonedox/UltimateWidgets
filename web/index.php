@@ -209,15 +209,23 @@ $app->get('/weather', function () use ($app) {
             // Some raw data (not necessarily accurate)
             var chart_data = [];
             //for (var i = 0; i < data.hourly_forecast.length; i++) {
-            for (var i = 0; i < data.hourly_forecast.length && i < 10; i++) {
+            for (var i = 0; i < data.hourly_forecast.length; i++) {
                 var hour = data.hourly_forecast[i];
-                chart_data[chart_data.length] = [
-                    hour.FCTTIME.civil,
-                    parseInt(hour.temp.english),
-                    hour.FCTTIME.civil + "\\n Temperature: " + hour.temp.english + 'F (feels like ' + hour.feelslike.english + ')',
-                    parseInt(hour.pop)/100,
-                    parseInt(hour.wspd.english)
-                ];
+                if (hour.FCTTIME.hour == 12) {
+                    $('#twelve').html(
+                        "Expected weather @ 12 o'clock:" + hour.condition+"\\n "+hour.temp.english+'F'+
+                        "<img src='"+hour.icon_url+">'"
+                    );
+                }
+                if (i < 10) {
+                    chart_data[chart_data.length] = [
+                        hour.FCTTIME.civil,
+                        parseInt(hour.temp.english),
+                        hour.FCTTIME.civil + "\\n Temperature: " + hour.temp.english + 'F (feels like ' + hour.feelslike.english + ')',
+                        parseInt(hour.pop)/100,
+                        parseInt(hour.wspd.english)
+                    ];
+                }
             }
             //var data = google.visualization.arrayToDataTable(chart_data);
             var data = new google.visualization.DataTable();
@@ -270,6 +278,7 @@ $app->get('/weather', function () use ($app) {
   <body>
     <center>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
+    <div id="twelve" style="width: 400px; height: 120px;"></div>
 </center>
   </body>
 </html>
