@@ -251,12 +251,13 @@ $app->get('/weather', function () use ($app) {
 
             var options = {
                 title : 'Hourly Forecast',
+                colors: ['blue', 'green', 'orange'],
                 height: chart_height,
                 width: chart_width,
                 vAxis: {title: "Temperature"},
                 vAxes: {
-                    0: {format: "#°", gridlines: {color: "#FFF"}},
-                    1: {title: "Chance of Precip", textStyle: {color: "red"}, format: "#%", viewWindow: {min: 0}, gridlines: {color: "#FFF"}},
+                    0: {format: "#°", gridlines: {color: "#FFF"}, textStyle: {color: "blue"}},
+                    1: {title: "Chance of Precip", textStyle: {color: "green"}, format: "#%", viewWindow: {min: 0}, gridlines: {color: "#FFF"}},
                     2: {title: "Wind", textPosition: "in", textStyle: {color: "orange"}, viewWindow: {max: 28, min: 0}, gridlines: {color: "#CCC"}}
                 },
                 hAxis: {title: "Hour"},
