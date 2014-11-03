@@ -235,7 +235,7 @@ $app->get('/weather', function () use ($app) {
                         hour.FCTTIME.civil,
                         parseInt(hour.temp.english),
                         hour.FCTTIME.civil + "\\n Temperature: " + hour.temp.english + '° (will feel like ' + hour.feelslike.english + '°)',
-                        parseInt(Math.max(hour.pop, 0)/100,
+                        Math.max(parseInt(hour.pop), 0)/100,
                         parseInt(hour.wspd.english)
                     ];
                 }
@@ -257,7 +257,7 @@ $app->get('/weather', function () use ($app) {
                 vAxes: {
                     0: {format: "#°"},
                     1: {title: "Precip", format: "#%"},
-                    2: {title: "", textPosition: "none", viewWindow: {max: 40, min: 0}}
+                    2: {title: "Wind"}
                 },
                 hAxis: {title: "Hour"},
                 seriesType: "line",
