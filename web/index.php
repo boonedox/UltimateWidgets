@@ -217,8 +217,8 @@ $app->get('/weather', function () use ($app) {
             for (var i = 0; i < weather_data.hourly_forecast.length; i++) {
                 var hour = weather_data.hourly_forecast[i];
                 if (hour.FCTTIME.hour == 12) {
-                    $('#twelve').html(
-                        "<img src='"+hour.icon_url+"'>" +
+                    $('#twelve_icon').html("<img src='"+hour.icon_url+"'>");
+                    $('#twelve_forecast').html(
                         "Expected weather @ 12 o'clock: " + hour.condition+", "+hour.temp.english+'&deg; (will feel like ' + hour.feelslike.english + '&deg;)'
                     );
                 }
@@ -272,7 +272,7 @@ $app->get('/weather', function () use ($app) {
                 }
                 weather_data = data;
                 drawChart();
-                setTimeout(fetchData, 60000);
+                setTimeout(fetchData, 10000);
             },
             'json');
         }
@@ -283,11 +283,9 @@ $app->get('/weather', function () use ($app) {
     </script>
   </head>
   <body>
-    <center>
-    <div id="twelve" style="padding-left: 250px"></div>
+    <div id="twelve" style="padding-left: 250px"><table><tr><td id="twelve_icon"></td><td id="twelve_forecast"></td></table></div>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
     <div style="position: relative; top: 130px; left: -50px "> <a href="http://www.wunderground.com" target="_blank"> <img width="150px" src='http://icons.wxug.com/logos/JPG/wundergroundLogo_4c_horz.jpg'> </a></div>
-</center>
   </body>
 </html>
 HTML;
