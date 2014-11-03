@@ -191,6 +191,7 @@ $app->get('/weather', function () use ($app) {
     <style>
     #gt-weather {
         font-family: 'Shadows Into Light', cursive;
+        font-size: 24pt;
     }
     #hor-minimalist-a {
         font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
@@ -223,9 +224,10 @@ $app->get('/weather', function () use ($app) {
                 var hour = weather_data.hourly_forecast[i];
                 if (!gt_weather_set && hour.FCTTIME.hour == 12) {
                     gt_weather_set = true;
-                    $('#twelve_icon').html("<img src='"+hour.icon_url+"'>");
+                    $('#twelve_label').html("<span id='gt-weather'>Gametime Weather:</span>");
+                    $('#twelve_icon').html("<img height=30 src='"+hour.icon_url+"'>");
                     $('#twelve_forecast').html(
-                        "<span id='gt-weather'>Gametime Weather:</span>" + hour.condition+", "+hour.temp.english+'&deg; (will feel like ' + hour.feelslike.english + '&deg;)'
+                        hour.condition+", "+hour.temp.english+'&deg; (will feel like ' + hour.feelslike.english + '&deg;)'
                     );
                 }
                 if (i < 10) {
@@ -289,7 +291,7 @@ $app->get('/weather', function () use ($app) {
     </script>
   </head>
   <body>
-    <div id="twelve" style="padding-left: 50px"><table><tr><td id="twelve_icon"></td><td id="twelve_forecast"></td></table></div>
+    <div id="twelve" style="padding-left: 50px"><table><tr><td id="gt-weather">Gametime Weather: </td><td id="twelve_icon"></td><td id="twelve_forecast"></td></table></div>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
     <div style="position: relative; top: 130px; left: 50px "> <a href="http://www.wunderground.com" target="_blank"> <img width="150px" src='http://icons.wxug.com/logos/JPG/wundergroundLogo_4c_horz.jpg'> </a></div>
   </body>
