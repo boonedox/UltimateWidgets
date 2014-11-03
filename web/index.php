@@ -120,7 +120,9 @@ $app->get('/ultimate', function () use ($app) {
                 drawTable(data);
                 setTimeout(fetchData, 60000);
             },
-            'json');
+            'json').fail(function() {
+                setTimeout(fetchData, 10000);
+            });
         }
         function drawTable(data) {
             var html = '<br><b>Last calendar update</b>: '+ data.last_update + ' -- ';
@@ -283,7 +285,9 @@ $app->get('/weather', function () use ($app) {
                 drawChart();
                 setTimeout(fetchData, 10000);
             },
-            'json');
+            'json').fail(function() {
+                setTimeout(fetchData, 10000);
+            });
         }
         $(document).ready(function() {
             drawChart();
