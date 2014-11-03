@@ -227,7 +227,7 @@ $app->get('/weather', function () use ($app) {
                     $('#twelve_label').html("<span id='gt-weather'>Gametime Weather:</span>");
                     $('#twelve_icon').html("<img height=30 src='"+hour.icon_url+"'>");
                     $('#twelve_forecast').html(
-                        hour.condition+", "+hour.temp.english+'&deg; (will feel like ' + hour.feelslike.english + '&deg;)'
+                        hour.condition+", "+hour.temp.english+'&deg; (will feel like ' + hour.feelslike.english + '&deg;), Wind: '+hour.wspd.english+'mph'
                     );
                 }
                 if (i < 10) {
@@ -257,7 +257,7 @@ $app->get('/weather', function () use ($app) {
                 vAxes: {
                     0: {format: "#°"},
                     1: {title: "Precip", format: "#%"},
-                    2: {title: "Wind"}
+                    2: {title: "Wind", viewWindow: {max: 40, min: 0}}
                 },
                 hAxis: {title: "Hour"},
                 seriesType: "line",
