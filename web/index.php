@@ -291,7 +291,7 @@ $app->get('/weather', function () use ($app) {
     </script>
   </head>
   <body>
-    <div id="twelve" style="padding-left: 50px"><table><tr><td id="gt-weather">Gametime Weather: </td><td id="twelve_icon"></td><td id="twelve_forecast"></td></table></div>
+    <div id="twelve" style="padding-left: 50px"><table><tr><td id="gt-weather">Gametime Weather: </td><td style="padding-top: 6px; padding-left: 6px;" id="twelve_icon"></td><td id="twelve_forecast"></td></table></div>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
     <div style="position: relative; top: 130px; left: 50px "> <a href="http://www.wunderground.com" target="_blank"> <img width="150px" src='http://icons.wxug.com/logos/JPG/wundergroundLogo_4c_horz.jpg'> </a></div>
   </body>
