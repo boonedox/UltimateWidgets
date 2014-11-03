@@ -235,7 +235,7 @@ $app->get('/weather', function () use ($app) {
                         hour.FCTTIME.civil,
                         parseInt(hour.temp.english),
                         hour.FCTTIME.civil + "\\n Temperature: " + hour.temp.english + '° (will feel like ' + hour.feelslike.english + '°)',
-                        parseInt(hour.pop)/100,
+                        parseInt(Math.max(hour.pop, 0)/100,
                         parseInt(hour.wspd.english)
                     ];
                 }
