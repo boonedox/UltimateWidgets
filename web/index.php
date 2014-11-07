@@ -82,6 +82,12 @@ $app->get('/ultimate', function () use ($app) {
     </style>
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["gauge"]});
+        var guage_chart;
+        $(document).ready(function() {
+            drawChart(0);
+            fetchData();
+            guage_chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+        });
         function drawChart(accepted) {
 
             var data = google.visualization.arrayToDataTable([
@@ -100,9 +106,8 @@ $app->get('/ultimate', function () use ($app) {
                 min: 0
             };
 
-            var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
 
-            chart.draw(data, options);
+            guage_chart.draw(data, options);
         }
         function fetchData() {
             $.get('ultimate_data', function(data) {
@@ -148,10 +153,6 @@ $app->get('/ultimate', function () use ($app) {
             html += '</tbody></table>';
             $('#table_div').html(html);
         }
-        $(document).ready(function() {
-            drawChart(0);
-            fetchData();
-        });
     </script>
   </head>
   <body>
@@ -216,6 +217,12 @@ $app->get('/weather', function () use ($app) {
         var chart_height = 250;
         var chart_data = [];
         var weather_data = {hourly_forecast: []};
+        var line_chart;
+        $(document).ready(function() {
+            line_chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            drawChart();
+            fetchData();
+        });
 
         function drawChart() {
             // Some raw data (not necessarily accurate)
@@ -271,8 +278,7 @@ $app->get('/weather', function () use ($app) {
                     2: {targetAxisIndex: 2}
                 }
             };
-            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+            line_chart.draw(data, options);
         }
         function fetchData() {
             $.get('weather_data?zip=84606', function(data) {
@@ -289,10 +295,6 @@ $app->get('/weather', function () use ($app) {
                 setTimeout(fetchData, 10000);
             });
         }
-        $(document).ready(function() {
-            drawChart();
-            fetchData();
-        });
     </script>
   </head>
   <body>
