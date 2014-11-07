@@ -84,9 +84,9 @@ $app->get('/ultimate', function () use ($app) {
         google.load("visualization", "1", {packages:["gauge"]});
         var guage_chart;
         $(document).ready(function() {
+            guage_chart = new google.visualization.Gauge(document.getElementById('chart_div'));
             drawChart(0);
             fetchData();
-            guage_chart = new google.visualization.Gauge(document.getElementById('chart_div'));
         });
         function drawChart(accepted) {
 
