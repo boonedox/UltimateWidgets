@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title id="page_title">Novell Ultimate</title>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <style>
+    th {
+        font-size: 12pt;
+    }
+    #hor-minimalist-a {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+        background: #fff;
+        width: 400px;
+        padding: 3px;
+        border-collapse: collapse;
+        text-align: left;
+        margin: 20px;
+    }
+    body {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+    }
+    </style>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["gauge"]});
+        var guage_chart;
+        $(document).ready(function() {
+            guage_chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+            drawChart(0);
+            fetchData();
+        });
+        function drawChart(accepted) {
+
+            var data = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['Accepted', accepted]
+            ]);
+
+            var options = {
+                width: 300, height: 300,
+                redFrom: 0, redTo: 4,
+                yellowFrom:4, yellowTo: 6,
+                greenFrom:6, greenTo: 20,
+                minorTicks: 4,
+                majorTicks: 4,
+                max: 20,
+                min: 0
+            };
+
+
+            guage_chart.draw(data, options);
+        }
+        function fetchData() {
+            $.get('ultimate_data', function(data) {
+                if (!data || data == null) {
+                    data = {
+                        accepted: 0,
+                        people: {
+                            accepted: [],
+                            maybe: [],
+                            declined: []
+                        },
+                        last_update: 'n/a',
+                        last_refresh: 'n/a'
+                    };
+                }
+                drawChart(data.accepted);
+                drawTable(data);
+                setTimeout(fetchData, 60000);
+            },
+            'json').fail(function() {
+                setTimeout(fetchData, 10000);
+            });
+        }
+        function drawTable(data) {
+            var html = '<br><b>Last calendar update</b>: '+ data.last_update + ' -- ';
+            html += '<b>Last refresh</b>: '+ data.last_refresh + '<br>';
+            html += '<table cellspacing=2 id="hor-minimalist-a" summary="Employee Pay Sheet">';
+            html += '<thead> <tr> <th scope="col">Accepted</th>';
+            html += '<th scope="col">Tentative</th>';
+            html += '<th scope="col">Declined</th>';
+            html += '</tr> </thead> <tbody>';
+            var a = '';
+            var t = '';
+            var d = '';
+            for (var i = 0; i < data.people.total; i++) {
+                a = data.people.accepted.length > i ? data.people.accepted[i] : '';
+                t = data.people.maybe.length > i ? data.people.maybe[i] : '';
+                d = data.people.declined.length > i ? data.people.declined[i] : '';
+                html += '<tr>';
+                html += '<td>' + a + '</td>';
+                html += '<td>' + t + '</td>';
+                html += '<td>' + d + '</td>';
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            $('#table_div').html(html);
+        }
+    </script>
+  </head>
+  <body>
+    <center>
+    <div id="chart_div" style="width: 400px; height: 120px;"></div>
+    <div id="table_div" style="position: relative; top: 160px"></div>
+</center>
+  </body>
+</html>
