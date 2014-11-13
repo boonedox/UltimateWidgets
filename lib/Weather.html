@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title id="page_title">Novell Weather</title>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+    <style>
+    #gt-weather {
+        font-family: 'Shadows Into Light', cursive;
+        font-size: 24pt;
+    }
+    #hor-minimalist-a {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+        background: #fff;
+        width: 400px;
+        padding: 3px;
+        border-collapse: collapse;
+        text-align: left;
+        margin: 20px;
+    }
+    body {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+    }
+    </style>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+        var chart_width = 800;
+        var chart_height = 250;
+        var chart_data = [];
+        var weather_data = {hourly_forecast: []};
+        var almanac = {};
+        var line_chart;
+        $(document).ready(function() {
+            line_chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            drawChart();
+            fetchData();
+        });
+
+        function drawChart() {
+            // Some raw data (not necessarily accurate)
+            var chart_data = [];
+            //for (var i = 0; i < data.hourly_forecast.length; i++) {
+            var gt_weather_set = false;
+            for (var i = 0; i < weather_data.hourly_forecast.length; i++) {
+                var hour = weather_data.hourly_forecast[i];
+                if (!gt_weather_set && hour.FCTTIME.hour == 12) {
+                    gt_weather_set = true;
+                    $('#twelve_label').html("<span id='gt-weather'>Gametime Weather:</span>");
+                    $('#twelve_icon').html("<img height=30 src='"+hour.icon_url+"'>");
+                    $('#twelve_forecast').html(
+                        hour.condition+", "+hour.temp.english+'&deg; (will feel like ' + hour.feelslike.english + '&deg;), Wind: '+hour.wspd.english+'mph'
+                    );
+                }
+                if (i < 10) {
+                    chart_data[chart_data.length] = [
+                        hour.FCTTIME.civil,
+                        parseInt(hour.temp.english),
+                        hour.FCTTIME.civil + "\n Temperature: " + hour.temp.english + '° (will feel like ' + hour.feelslike.english + '°)',
+                        Math.max(parseInt(hour.pop), 0)/100,
+                        parseInt(hour.wspd.english)
+                    ];
+                }
+            }
+            //var data = google.visualization.arrayToDataTable(chart_data);
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Hour');
+            data.addColumn('number', 'Temp');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn('number', 'Precip %');
+            data.addColumn('number', 'Wind Speed');
+            data.addRows(chart_data);
+            var record_high = null;
+            var record_low = null;
+            if (typeof almanac.temp_high != "undefined") {
+                record_high = almanac.temp_high.record.F;
+                record_low = almanac.temp_low.record.F;
+            }
+
+            var options = {
+                title : 'Hourly Forecast',
+                colors: ['blue', 'green', 'orange'],
+                height: chart_height,
+                width: chart_width,
+                vAxis: {title: "Temperature"},
+                vAxes: {
+                    0: {format: "#°", gridlines: {color: "#FFF"}, textStyle: {color: "blue"}, viewWindow: {max: record_high, min: record_low}},
+                    1: {title: "Chance of Precip", textStyle: {color: "green"}, format: "#%", viewWindow: {max: 1, min: 0}, gridlines: {color: "#FFF"}},
+                    2: {title: "Wind", textPosition: "in", textStyle: {color: "orange"}, viewWindow: {max: 28, min: 0}, gridlines: {color: "#CCC"}}
+                },
+                hAxis: {title: "Hour"},
+                seriesType: "line",
+                curveType: "function",
+                series: {
+                    0: {targetAxisIndex: 0},
+                    1: {targetAxisIndex: 1},
+                    2: {targetAxisIndex: 2}
+                }
+            };
+            line_chart.draw(data, options);
+        }
+        function fetchData() {
+            $.get('weather_data?zip=84606', function(data) {
+                if (data == null || !data.hourly) {
+                    data = {
+                        hourly: {hourly_forecast: []},
+                        record: {
+                            almanac: {}
+                        }
+                    };
+                }
+                weather_data = data.hourly;
+                almanac = data.record.almanac;
+                drawChart();
+                setTimeout(fetchData, 10000);
+            },
+            'json').fail(function() {
+                setTimeout(fetchData, 10000);
+            });
+        }
+    </script>
+  </head>
+  <body>
+    <div id="twelve" style="padding-left: 50px"><table><tr><td id="gt-weather">Gametime Weather: </td><td style="padding-top: 6px; padding-left: 6px;" id="twelve_icon"></td><td id="twelve_forecast"></td></table></div>
+    <div id="chart_div" style="width: 400px; height: 120px;"></div>
+    <div style="position: relative; top: 130px; left: 50px "> <a href="http://www.wunderground.com" target="_blank"> <img width="150px" src='http://icons.wxug.com/logos/JPG/wundergroundLogo_4c_horz.jpg'> </a></div>
+  </body>
+</html>
