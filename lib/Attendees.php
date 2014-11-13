@@ -4,6 +4,11 @@ namespace uw;
 
 class Attendees
 {
+    private $logger;
+    public function __construct($logger)
+    {
+        $this->logger = $logger;
+    }
     public function getAttendees()
     {
         $url = getenv('EXCEL_FILE_URL');
@@ -15,9 +20,11 @@ class Attendees
 
         $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
         $stats['accepted'] = $sheetData[2]['B'];
+        $this->logger->addDebug('retrieved file, last update: '.$sheetData[2]['C']);
         $ts = strtotime($sheetData[2]['C']);
 
-        if (!isset($_GET['debug']) && $ts < strtotime(date('Y-m-d'))) {
+        if (empty($_GET['debug']) && $ts < strtotime(date('Y-m-d'))) {
+            $this->logger->addDebug('last update is more than a day old, returning empty data');
             return array(
                 'accepted' => 0,
                 'people' => array(

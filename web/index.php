@@ -19,7 +19,7 @@ $app->get('/ultimate', function () use ($app) {
     return file_get_contents('../lib/Attendees.html');
 });
 $app->get('/ultimate_data', function () use ($app) {
-    $u = new uw\Attendees();
+    $u = new uw\Attendees($app['monolog']);
     return json_encode($u->getAttendees());
 });
 $app->get('/', function () use ($app) {
@@ -27,7 +27,7 @@ $app->get('/', function () use ($app) {
     return 'Hello';
 });
 $app->get('/weather_data', function () use ($app) {
-    $w = new uw\Weather();
+    $w = new uw\Weather($app['monolog']);
     $hourly_data = json_decode($w->getHourlyWeatherForZip($_GET['zip']));
     $record_data = json_decode($w->getRecordWeatherForZip($_GET['zip']));
     $ret = array(
