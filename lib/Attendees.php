@@ -17,8 +17,8 @@ class Attendees
         $stats['accepted'] = $sheetData[2]['B'];
         $ts = strtotime($sheetData[2]['C']);
 
-        if ($ts < strtotime(date('Y-m-d'))) {
-            $t = array(
+        if (!isset($_GET['debug']) && $ts < strtotime(date('Y-m-d'))) {
+            return array(
                 'accepted' => 0,
                 'people' => array(
                     'accepted' => array(),
