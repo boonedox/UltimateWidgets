@@ -20,7 +20,6 @@
     #hor-minimalist-a {
         font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
         font-size: 12px;
-        background: #fff;
         width: 400px;
         padding: 3px;
         border-collapse: collapse;
@@ -103,7 +102,7 @@
         function drawTable(data) {
             var html = '<br><b>Last calendar update</b>: '+ data.last_update + ' -- ';
             html += '<b>Last refresh</b>: '+ data.last_refresh + '<br>';
-            html += '<table cellspacing=2 id="hor-minimalist-a" summary="Employee Pay Sheet">';
+            html += '<table cellspacing=2 id="hor-minimalist-a" >';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
             html += '<th scope="col">Tentative</th>';
             html += '<th scope="col">Declined</th>';
