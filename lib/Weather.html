@@ -33,8 +33,10 @@
         var weather_data = {hourly_forecast: []};
         var almanac = {};
         var line_chart;
+        var line_chart2;
         $(document).ready(function() {
             line_chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            line_chart2 = new google.visualization.LineChart(document.getElementById('chart_div2'));
             drawChart();
             fetchData();
         });
@@ -100,6 +102,7 @@
                 }
             };
             line_chart.draw(data, options);
+            line_chart2.draw(data, options);
         }
         function fetchData() {
             $.get('weather_data?zip=84606', function(data) {
@@ -125,6 +128,7 @@
   <body>
     <div id="twelve" style="padding-left: 50px"><table><tr><td id="gt-weather">Gametime Weather: </td><td style="padding-top: 6px; padding-left: 6px;" id="twelve_icon"></td><td id="twelve_forecast"></td></table></div>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
+    <div id="chart_div2" style="width: 400px; height: 120px;"></div>
     <div style="position: relative; top: 130px; left: 50px "> <a href="http://www.wunderground.com" target="_blank"> <img width="150px" src='http://icons.wxug.com/logos/JPG/wundergroundLogo_4c_horz.jpg'> </a></div>
   </body>
 </html>

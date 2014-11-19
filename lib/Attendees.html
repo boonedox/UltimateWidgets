@@ -8,6 +8,15 @@
     th {
         font-size: 12pt;
     }
+    td.accepted {
+        color: green;
+    }
+    td.maybe {
+        color: orange;
+    }
+    td.declined {
+        color: red;
+    }
     #hor-minimalist-a {
         font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
         font-size: 12px;
@@ -26,16 +35,22 @@
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["gauge"]});
         var guage_chart;
+        var maybe_guage_chart;
         $(document).ready(function() {
             guage_chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+            maybe_guage_chart = new google.visualization.Gauge(document.getElementById('maybe_chart_div'));
             drawChart(0);
             fetchData();
         });
-        function drawChart(accepted) {
+        function drawChart(accepted, maybe) {
 
             var data = google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
                 ['Accepted', accepted]
+            ]);
+            var maybe_data = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['', maybe + accepted]
             ]);
 
             var options = {
@@ -51,6 +66,7 @@
 
 
             guage_chart.draw(data, options);
+            maybe_guage_chart.draw(maybe_data, options);
         }
         function fetchData() {
             $.get('ultimate_data', function(data) {
@@ -66,8 +82,18 @@
                         last_refresh: 'n/a'
                     };
                 }
-                drawChart(data.accepted);
+                drawChart(data.accepted, data.maybe);
                 drawTable(data);
+                var html = data.accepted;
+                if (data.maybe > 0) {
+                    $('#count_div').css('top', '-23px');
+                    $('#count_div').css('height', '40px');
+                    html +=  "<span style='font-size: 7pt'><br>("+data.maybe+" maybe)";
+                } else {
+                    $('#count_div').css('top', '-18px');
+                    $('#count_div').css('height', '24px');
+                }
+                $('#count_div').html(html);
                 setTimeout(fetchData, 60000);
             },
             'json').fail(function() {
@@ -90,9 +116,9 @@
                 t = data.people.maybe.length > i ? data.people.maybe[i] : '';
                 d = data.people.declined.length > i ? data.people.declined[i] : '';
                 html += '<tr>';
-                html += '<td>' + a + '</td>';
-                html += '<td>' + t + '</td>';
-                html += '<td>' + d + '</td>';
+                html += '<td class="accepted">' + a + '</td>';
+                html += '<td class="maybe">' + t + '</td>';
+                html += '<td class="declined">' + d + '</td>';
                 html += '</tr>';
             }
             html += '</tbody></table>';
@@ -103,7 +129,9 @@
   <body>
     <center>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
-    <div id="table_div" style="position: relative; top: 160px"></div>
+    <div id="maybe_chart_div" style="width: 400px; height: 120px;position: relative; top: -120px; opacity: .2;"></div>
+    <div id="count_div" style="width: 83px; height: 50px;position: relative; top: -32px; line-height: 7px;font-size: 30pt;background-color: #f7f7f7; z-index: 1"></div>
+    <div id="table_div" style="position: relative; top: 12px"></div>
 </center>
   </body>
 </html>
