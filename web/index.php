@@ -29,10 +29,18 @@ $app->get('/', function () use ($app) {
 $app->get('/weather_data', function () use ($app) {
     $w = new uw\Weather($app['monolog']);
     $hourly_data = json_decode($w->getHourlyWeatherForZip($_GET['zip']));
+    $gametime_forecast_date = null;
+    foreach ($hourly_data->hourly_forecast as $hour) {
+        if ($hour->FCTTIME->hour == '12') {
+            $gametime_forecast_date = date('l, M jS', strtotime($hour->FCTTIME->pretty)) . ', 12pm';
+        }
+    }
     $record_data = json_decode($w->getRecordWeatherForZip($_GET['zip']));
     $ret = array(
         'hourly' => $hourly_data,
-        'record' => $record_data
+        'record' => $record_data,
+        'last_refresh' => date('M jS, g:i:s a'),
+        'gametime_forecast_date' => $gametime_forecast_date
     );
     return json_encode($ret);
 });
