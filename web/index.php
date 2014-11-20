@@ -33,6 +33,7 @@ $app->get('/weather_data', function () use ($app) {
     foreach ($hourly_data->hourly_forecast as $hour) {
         if ($hour->FCTTIME->hour == '12') {
             $gametime_forecast_date = date('l, M jS', strtotime($hour->FCTTIME->pretty)) . ', 12pm';
+            break;
         }
     }
     $record_data = json_decode($w->getRecordWeatherForZip($_GET['zip']));
