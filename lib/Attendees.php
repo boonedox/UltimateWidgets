@@ -20,11 +20,11 @@ class Attendees
 
         $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
         $stats['accepted'] = $sheetData[2]['B'];
-        $this->logger->addDebug('retrieved file, last update: '.$sheetData[2]['C']);
+        //$this->logger->addDebug('retrieved file, last update: '.$sheetData[2]['C']);
         $ts = strtotime($sheetData[2]['C']);
 
         if (empty($_GET['debug']) && $ts < strtotime(date('Y-m-d'))) {
-            $this->logger->addDebug('last update is more than a day old, returning empty data');
+            //$this->logger->addDebug('last update is more than a day old, returning empty data');
             return array(
                 'accepted' => 0,
                 'people' => array(

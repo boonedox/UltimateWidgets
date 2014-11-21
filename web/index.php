@@ -15,7 +15,7 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 // Our web handlers
 
 $app->get('/ultimate', function () use ($app) {
-    $app['monolog']->addDebug('logging output.');
+    //$app['monolog']->addDebug('logging output.');
     return file_get_contents('../lib/Attendees.html');
 });
 $app->get('/ultimate_data', function () use ($app) {
@@ -23,7 +23,7 @@ $app->get('/ultimate_data', function () use ($app) {
     return json_encode($u->getAttendees());
 });
 $app->get('/', function () use ($app) {
-    $app['monolog']->addDebug('logging output.');
+    //$app['monolog']->addDebug('logging output.');
     return 'Hello';
 });
 $app->get('/weather_data', function () use ($app) {
@@ -46,7 +46,7 @@ $app->get('/weather_data', function () use ($app) {
     return json_encode($ret);
 });
 $app->get('/weather', function () use ($app) {
-    $app['monolog']->addDebug('logging output.');
+    //$app['monolog']->addDebug('logging output.');
     return file_get_contents('../lib/Weather.html');
 });
 

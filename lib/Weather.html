@@ -133,7 +133,7 @@
                 weather_data.last_refresh = data.last_refresh;
                 almanac = data.record.almanac;
                 drawChart();
-                setTimeout(fetchData, 10000);
+                setTimeout(fetchData, 60000);
             },
             'json').fail(function() {
                 setTimeout(fetchData, 10000);
