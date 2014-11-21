@@ -12,7 +12,7 @@
         color: green;
     }
     td.maybe {
-        color: orange;
+        color: rgb(181, 119, 5);
     }
     td.declined {
         color: red;
@@ -21,9 +21,10 @@
         font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
         font-size: 12px;
         width: 400px;
-        padding: 3px;
-        border-collapse: collapse;
+        padding: 8px;
+        border: 1px dotted grey;
         text-align: left;
+        background-color: #f5f5f5;
         margin: 20px;
     }
     body {
@@ -100,8 +101,8 @@
             });
         }
         function drawTable(data) {
-            var html = '<br><b>Last calendar update</b>: '+ data.last_update + ' -- ';
-            html += '<b>Last refresh</b>: '+ data.last_refresh + '<br>';
+            var html = '<br><b>Last calendar update</b>: <i>'+ data.last_update + '</i>, ';
+            html += '<b>&nbsp;&nbsp;&nbsp;Last refresh</b>: <i>'+ data.last_refresh + '</i><br>';
             html += '<table cellspacing=2 id="hor-minimalist-a" >';
             html += '<thead> <tr> <th scope="col">Accepted</th>';
             html += '<th scope="col">Tentative</th>';
