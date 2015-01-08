@@ -121,6 +121,9 @@
                 html += '<td class="declined">' + d + '</td>';
                 html += '</tr>';
             }
+            if (data.people && data.pending) {
+                html += '<tr><td colspan="3" align="center"><i>Waiting for response: <b>' + data.pending + '</b></i></td></tr>';
+            }
             html += '</tbody></table>';
             $('#table_div').html(html);
         }
