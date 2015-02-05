@@ -72,6 +72,12 @@
             var chart_data = [];
             //for (var i = 0; i < data.hourly_forecast.length; i++) {
             var gt_weather_set = false;
+            var record_high = null;
+            var record_low = null;
+            if (typeof almanac.temp_high != "undefined") {
+                record_high = parseInt(almanac.temp_high.record.F);
+                record_low = parseInt(almanac.temp_low.record.F);
+            }
             for (var i = 0; i < weather_data.hourly_forecast.length; i++) {
                 var hour = weather_data.hourly_forecast[i];
                 if (!gt_weather_set && hour.FCTTIME.hour == 12) {
@@ -85,6 +91,8 @@
                     $('#last_refresh').html('Last update: '+weather_data.last_refresh);
                 }
                 if (i < 13) {
+                    record_high = Math.max(record_high, parseInt(hour.temp.english));
+                    //record_low = Math.min(record_low, parseInt(hour.temp.english));
                     chart_data[chart_data.length] = [
                         hour.FCTTIME.civil,
                         parseInt(hour.temp.english),
@@ -102,12 +110,6 @@
             data.addColumn('number', 'Precip %');
             data.addColumn('number', 'Wind Speed');
             data.addRows(chart_data);
-            var record_high = null;
-            var record_low = null;
-            if (typeof almanac.temp_high != "undefined") {
-                record_high = almanac.temp_high.record.F;
-                record_low = almanac.temp_low.record.F;
-            }
 
             var options = {
                 title : 'Forecast for next 12 hours',
