@@ -3,6 +3,7 @@ This project is based on the sample php project provided by Heroku.  As such, it
 You will need to provide two environment variables in order for the app to work.
 
 WEATHER_API_KEY - used to fetch weather data from wunderground
+
 EXCEL_FILE_URL - used to fetch spreadsheet for attendee data.
 
 The weather app should be fairly re-usable.
