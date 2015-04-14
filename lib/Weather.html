@@ -78,6 +78,7 @@
                 record_high = parseInt(almanac.temp_high.record.F);
                 record_low = parseInt(almanac.temp_low.record.F);
             }
+            var wind_max = 28;
             for (var i = 0; i < weather_data.hourly_forecast.length; i++) {
                 var hour = weather_data.hourly_forecast[i];
                 if (!gt_weather_set && hour.FCTTIME.hour == 12) {
@@ -100,6 +101,7 @@
                         Math.max(parseInt(hour.pop), 0)/100,
                         parseInt(hour.wspd.english)
                     ];
+                    wind_max = Math.max(wind_max, hour.wspd.english);
                 }
             }
             //var data = google.visualization.arrayToDataTable(chart_data);
@@ -119,7 +121,7 @@
                 vAxes: {
                     0: {format: "#°", gridlines: {color: "#FFF"}, textStyle: {color: "blue"}, viewWindow: {max: record_high, min: record_low}},
                     1: {title: "Chance of Precip", textStyle: {color: "green"}, format: "#%", viewWindow: {max: 1, min: 0}, gridlines: {color: "#FFF"}},
-                    2: {title: "Wind", textPosition: "in", textStyle: {color: "orange"}, viewWindow: {max: 28, min: 0}, gridlines: {color: "#CCC"}}
+                    2: {title: "Wind", textPosition: "in", textStyle: {color: "orange"}, viewWindow: {max: wind_max, min: 0}, gridlines: {color: "#CCC"}}
                 },
                 hAxis: {title: "Hour"},
                 seriesType: "line",
@@ -132,24 +134,34 @@
             };
             line_chart.draw(data, options);
         }
+        var force = 0;
+        var force_retry_wait = 5000;
         function fetchData() {
-            $.get('weather_data?zip=84606', function(data) {
-                if (data == null || !data.hourly) {
-                    data = {
-                        hourly: {hourly_forecast: []},
-                        record: {
-                            almanac: {}
-                        },
-                        last_refresh: '',
-                        gametime_forecast_date: ''
-                    };
+            $.get('weather_data?zip=84606&force='+force, function(data) {
+                try {
+                    if (data == null || !data.hourly) {
+                        data = {
+                            hourly: {hourly_forecast: []},
+                            record: {
+                                almanac: {}
+                            },
+                            last_refresh: '',
+                            gametime_forecast_date: ''
+                        };
+                    }
+                    weather_data = data.hourly;
+                    weather_data.gametime_forecast_date = data.gametime_forecast_date;
+                    weather_data.last_refresh = data.last_refresh;
+                    almanac = data.record.almanac;
+                    drawChart();
+                    force = 0;
+                    force_retry_wait = 5000;
+                    setTimeout(fetchData, 60000);
+                } catch (e) {
+                    force = 1;
+                    setTimeout(fetchData, force_retry_wait);
+                    force_retry_wait *= 2;
                 }
-                weather_data = data.hourly;
-                weather_data.gametime_forecast_date = data.gametime_forecast_date;
-                weather_data.last_refresh = data.last_refresh;
-                almanac = data.record.almanac;
-                drawChart();
-                setTimeout(fetchData, 60000);
             },
             'json').fail(function() {
                 setTimeout(fetchData, 10000);
