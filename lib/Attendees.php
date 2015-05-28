@@ -27,10 +27,12 @@ class Attendees
             //$this->logger->addDebug('last update is more than a day old, returning empty data');
             return array(
                 'accepted' => 0,
+                'maybe' => 0,
                 'people' => array(
                     'accepted' => array(),
                     'maybe' => array(),
-                    'declined' => array()
+                    'declined' => array(),
+                    'total' => 0
                 ),
                 'last_update' => date('M jS, g:ia', $ts),
                 'last_refresh' => date('M jS, g:ia')

@@ -73,6 +73,7 @@
                 if (!data || data == null) {
                     data = {
                         accepted: 0,
+                        maybe: 0,
                         people: {
                             accepted: [],
                             maybe: [],
@@ -90,7 +91,7 @@
                     $('#count_div').css('height', '40px');
                     html +=  "<span style='font-size: 7pt'><br>("+data.maybe+" maybe)";
                 } else {
-                    $('#count_div').css('top', '-18px');
+                    $('#count_div').css('top', '-14px');
                     $('#count_div').css('height', '24px');
                 }
                 $('#count_div').html(html);
