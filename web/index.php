@@ -18,6 +18,11 @@ $app->get('/ultimate', function () use ($app) {
     //$app['monolog']->addDebug('logging output.');
     return file_get_contents('../lib/Attendees.html');
 });
+$app->get('/ip', function () use ($app) {
+    $ret = "YOUR IP: ".$_SERVER['REMOTE_ADDR']."<br>";
+    $ret .= "MY IP: ".file_get_contents('https://jeremiah.dev.insidesales.com/ip.php');
+    return $ret;
+});
 $app->get('/ultimate_data', function () use ($app) {
     $u = new uw\Attendees($app['monolog']);
     return json_encode($u->getAttendees());
