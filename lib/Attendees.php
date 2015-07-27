@@ -2,6 +2,9 @@
 
 namespace uw;
 
+//apache_setenv('FILE_URL', 'https://onedrive.live.com/download.aspx?cid=fa17e0833ee4a1bf&id=documents&resid=FA17E0833EE4A1BF%213043&authkey=!AOYwb97EzOCt0qQ', true);
+//putenv('FILE_URL=https://onedrive.live.com/download.aspx?cid=fa17e0833ee4a1bf&id=documents&resid=FA17E0833EE4A1BF%213043&authkey=!AOYwb97EzOCt0qQ');
+
 class Attendees
 {
     private $logger;
@@ -9,21 +12,91 @@ class Attendees
     {
         $this->logger = $logger;
     }
+
     public function getAttendees()
     {
-        $url = getenv('EXCEL_FILE_URL');
+        $url = getenv('FILE_URL');
+        //$url = "https://www.dropbox.com/s/08yq8ymrsj4itc7/UltimateReponses.csv?dl=1";
         $data = file_get_contents($url);
         $dir = sys_get_temp_dir();
-        $inputFileName = $dir.'/tmp.xls';
-        file_put_contents($inputFileName, $data);
-        $objPHPExcel = \PHPExcel_IOFactory::load($inputFileName);
+        $filename = $dir.'/tmp.xls';
+        file_put_contents($filename, $data);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); 
+        $mime_type = finfo_file($finfo, $filename);
+        finfo_close($finfo);
+        if ($mime_type == 'text/plain') {
+            $stats = $this->getAttendeesFromCsv($filename);
+        } else {
+            $stats = $this->getAttendeesFromExcel($filename);
+        }
+        $stats['last_refresh'] = date('M jS, g:ia');
+        $stats['people']['total'] = max(
+            count($stats['people']['accepted']),
+            count($stats['people']['maybe']),
+            count($stats['people']['declined'])
+        );
+        return $stats;
+    }
+    private function getDefaultStats()
+    {
+        $stats = array(
+            'accepted' => 0,
+            'maybe' => 0,
+            'declined' => 0,
+            'pending' => 0,
+            'total' => 0,
+            'people' => array(
+                'accepted' => array(),
+                'maybe' => array(),
+                'declined' => array(),
+                'total' => 0
+            ),
+            'last_update' => date('M jS, g:ia'),
+        );
+    }
+
+    private function getAttendeesFromCsv($filename)
+    {
+        $h = fopen($filename, 'r');
+        fgetcsv($h); // pop headers
+        while ($row = fgetcsv($h)) {
+            $name = $row[0];
+            $response = strtolower($row[1]);
+            $response_total = $row[2];
+            switch ($response) {
+                case 'accepted':
+                    break;
+                case 'tentative':
+                    $response = 'maybe';
+                    break;
+                case 'declined':
+                    break;
+                case 'no response':
+                    $response = 'pending';
+                    break;
+                default:
+                    $response = null;
+                    break;
+            }
+            if (!is_null($response)) {
+                $stats['people'][$response][] = $name;
+                $stats[$response]++;
+                $stats['total']++;
+            }
+        }
+        return $stats;
+    }
+
+    private function getAttendeesFromExcel($filename)
+    {
+        $objPHPExcel = \PHPExcel_IOFactory::load($filename);
 
         $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
         $stats['accepted'] = $sheetData[2]['B'];
         //$this->logger->addDebug('retrieved file, last update: '.$sheetData[2]['C']);
         $ts = strtotime($sheetData[2]['C']);
 
-        if (empty($_GET['debug']) && $ts < strtotime(date('Y-m-d'))) {
+        if (0 && empty($_GET['debug']) && $ts < strtotime(date('Y-m-d'))) {
             //$this->logger->addDebug('last update is more than a day old, returning empty data');
             return array(
                 'accepted' => 0,
@@ -57,11 +130,8 @@ class Attendees
                 $stats['people']['declined'][] = $sheetData[$x]['C'];
             }
         }
-        $stats['people']['total'] = max(
-            count($stats['people']['accepted']),
-            count($stats['people']['maybe']),
-            count($stats['people']['declined'])
-        );
         return $stats;
+
     }
+
 }
