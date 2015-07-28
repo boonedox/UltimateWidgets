@@ -2,9 +2,6 @@
 
 namespace uw;
 
-//apache_setenv('FILE_URL', 'https://onedrive.live.com/download.aspx?cid=fa17e0833ee4a1bf&id=documents&resid=FA17E0833EE4A1BF%213043&authkey=!AOYwb97EzOCt0qQ', true);
-//putenv('FILE_URL=https://onedrive.live.com/download.aspx?cid=fa17e0833ee4a1bf&id=documents&resid=FA17E0833EE4A1BF%213043&authkey=!AOYwb97EzOCt0qQ');
-
 class Attendees
 {
     private $logger;
@@ -16,7 +13,6 @@ class Attendees
     public function getAttendees()
     {
         $url = getenv('FILE_URL');
-        //$url = "https://www.dropbox.com/s/08yq8ymrsj4itc7/UltimateReponses.csv?dl=1";
         $data = file_get_contents($url);
         $dir = sys_get_temp_dir();
         $filename = $dir.'/tmp.xls';
@@ -29,6 +25,13 @@ class Attendees
         } else {
             $stats = $this->getAttendeesFromExcel($filename);
         }
+        $last_update_ts = $stats['last_update_ts'];
+        if (empty($_GET['debug']) && $last_update_ts < strtotime(date('Y-m-d'))) {
+            //$this->logger->addDebug('last update is more than a day old, returning empty data');
+            $stats = $this->getDefaultStats();
+            $stats['last_update'] = date('M jS, g:ia', $last_update_ts);
+        }
+        $stats['last_update'] = date('M jS, g:ia', $stats['last_update_ts']);
         $stats['last_refresh'] = date('M jS, g:ia');
         $stats['people']['total'] = max(
             count($stats['people']['accepted']),
@@ -51,14 +54,16 @@ class Attendees
                 'declined' => array(),
                 'total' => 0
             ),
-            'last_update' => date('M jS, g:ia'),
         );
+        return $stats;
     }
 
     private function getAttendeesFromCsv($filename)
     {
         $h = fopen($filename, 'r');
-        fgetcsv($h); // pop headers
+        $headers = fgetcsv($h); // pop headers
+        $stats['last_update_ts'] = strtotime($headers[3]);
+        $ts = strtotime($headers[3]);
         while ($row = fgetcsv($h)) {
             $name = $row[0];
             $response = strtolower($row[1]);
@@ -95,22 +100,8 @@ class Attendees
         $stats['accepted'] = $sheetData[2]['B'];
         //$this->logger->addDebug('retrieved file, last update: '.$sheetData[2]['C']);
         $ts = strtotime($sheetData[2]['C']);
+        $stats['last_update_ts'] = $ts;
 
-        if (empty($_GET['debug']) && $ts < strtotime(date('Y-m-d'))) {
-            //$this->logger->addDebug('last update is more than a day old, returning empty data');
-            return array(
-                'accepted' => 0,
-                'maybe' => 0,
-                'people' => array(
-                    'accepted' => array(),
-                    'maybe' => array(),
-                    'declined' => array(),
-                    'total' => 0
-                ),
-                'last_update' => date('M jS, g:ia', $ts),
-                'last_refresh' => date('M jS, g:ia')
-            );
-        }
         $stats['last_update'] = date('M jS, g:ia', $ts);
         $stats['last_refresh'] = date('M jS, g:ia');
         $stats['maybe'] = $sheetData[3]['B'];
