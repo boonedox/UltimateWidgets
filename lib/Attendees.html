@@ -69,6 +69,12 @@
             maybe_guage_chart.draw(maybe_data, options);
         }
         function fetchData() {
+            var h = (new Date).getHours();
+            if (h < 6 || h > 20) {
+                // don't auto-refresh between 10pm and 6am
+                setTimeout(fetchData, 300000);
+                return;
+            }
             $.get('ultimate_data', function(data) {
                 if (!data || data == null) {
                     data = {

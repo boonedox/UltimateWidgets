@@ -137,6 +137,12 @@
         var force = 0;
         var force_retry_wait = 5000;
         function fetchData() {
+            var h = (new Date).getHours();
+            if (h < 6 || h > 20) {
+                // don't auto-refresh between 10pm and 6am
+                setTimeout(fetchData, 300000);
+                return;
+            }
             $.get('weather_data?zip=84606&force='+force, function(data) {
                 try {
                     if (data == null || !data.hourly) {
