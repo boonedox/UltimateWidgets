@@ -62,6 +62,7 @@ class Attendees
     {
         $h = fopen($filename, 'r');
         $headers = fgetcsv($h); // pop headers
+        $stats = $this->getDefaultStats();
         $stats['last_update_ts'] = strtotime($headers[3]);
         $ts = strtotime($headers[3]);
         while ($row = fgetcsv($h)) {
@@ -97,6 +98,7 @@ class Attendees
         $objPHPExcel = \PHPExcel_IOFactory::load($filename);
 
         $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+        $stats = $this->getDefaultStats();
         $stats['accepted'] = $sheetData[2]['B'];
         //$this->logger->addDebug('retrieved file, last update: '.$sheetData[2]['C']);
         $ts = strtotime($sheetData[2]['C']);
