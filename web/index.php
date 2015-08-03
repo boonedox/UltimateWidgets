@@ -16,7 +16,7 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 
 $app->get('/ultimate', function () use ($app) {
     //$app['monolog']->addDebug('logging output.');
-    return file_get_contents('../lib/Attendees.html');
+    return file_get_contents('../lib/Attendees2.html');
 });
 $app->get('/ip', function () use ($app) {
     $ret = "YOUR IP: ".$_SERVER['REMOTE_ADDR']."<br>";
