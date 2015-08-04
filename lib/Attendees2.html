@@ -141,7 +141,7 @@ app.controller('customersCtrl', function($scope, $http, $timeout) {
                 $scope.pending = response.pending;
                 $scope.last_refresh = response.last_refresh;
                 $scope.last_update = response.last_update;
-                $timeout(loadData,2000);
+                $timeout(loadData, 60000);
                 drawChart(response.accepted, response.maybe);
         });
     }
