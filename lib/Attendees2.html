@@ -142,7 +142,7 @@ app.controller('customersCtrl', function($scope, $http, $timeout) {
                 $scope.pending = response.pending;
                 $scope.last_refresh = response.last_refresh;
                 $scope.last_update = response.last_update;
-                $timeout(loadData, 60000);
+                $timeout(loadData, 30 * 1000);
                 drawChart(response.accepted, response.maybe);
         });
     }
@@ -174,13 +174,11 @@ function drawChart(accepted, maybe) {
         redFrom: 0, redTo: 4,
         yellowFrom:4, yellowTo: 6,
         greenFrom:6, greenTo: 20,
-        minorTicks: 4,
-        majorTicks: 4,
         max: 20,
         min: 0,
         animation: {
-            easing: 'in',
-            duration: 6000
+            easing: 'inAndOut',
+            duration: 500
         }
     };
 
