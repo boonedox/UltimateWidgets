@@ -11,6 +11,7 @@ $app['debug'] = true;
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
   'monolog.logfile' => 'php://stderr',
 ));
+$app['monolog']->addDebug('remoteip: '.getenv('HTTP_X_FORWARDED_FOR'));
 
 // Our web handlers
 
@@ -19,8 +20,15 @@ $app->get('/ultimate', function () use ($app) {
     return file_get_contents('../lib/Attendees2.html');
 });
 $app->get('/ip', function () use ($app) {
-    $ret = "YOUR IP: ".$_SERVER['REMOTE_ADDR']."<br>";
-    $ret .= "MY IP: ".file_get_contents('https://jeremiah.dev.insidesales.com/ip.php');
+    $ret = "YOUR IP: ".getenv('HTTP_X_FORWARDED_FOR');
+    $ip = null;
+    $filename = sys_get_temp_dir().'/myip';
+    if (!file_exists($filename) || time() - filemtime($filename) > 86400) {
+        echo "not cached\n";
+        $ip = file_get_contents('http://ipecho.net/plain');
+        file_put_contents($filename, $ip);
+    }
+    $ret .= "MY IP: ".file_get_contents($filename);
     return $ret;
 });
 $app->get('/ultimate_data', function () use ($app) {
