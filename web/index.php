@@ -19,6 +19,9 @@ $app->get('/ultimate', function () use ($app) {
     //$app['monolog']->addDebug('logging output.');
     return file_get_contents('../lib/Attendees2.html');
 });
+$app->get('/fetch', function () use ($app) {
+    return file_get_contents('http://sforce.alpha.dev.insidesales.com/do=noauth/atomConfigOption?configKey=Salesforce%3ASimpleSeek&organization_id=00D1a000000ZiE7&token=0051a000000vEjSAAUQOkK8r9UNOXOrLr6MdUrH2tlOvgvfV3LsRyqufNUulItQ0Ql3hwjsAfPtbWEFI5r8oJWpSKtepcRjgavVLXLVnYxOMevBRWYSu8dk4MiGCTPv6');
+});
 $app->get('/ip', function () use ($app) {
     $ret = "YOUR IP: ".getenv('HTTP_X_FORWARDED_FOR');
     $ip = null;
