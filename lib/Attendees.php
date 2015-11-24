@@ -14,12 +14,12 @@ class Attendees
     {
         $dir = sys_get_temp_dir();
         $filename = $dir.'/tmp.xls';
-        if (file_exists($filename) && time() - filemtime($filename) > 60) {
+        if (file_exists($filename) && time() - filemtime($filename) < 60) {
+            $data = file_get_contents($filename);
+        } else {
             $url = getenv('FILE_URL');
             $data = file_get_contents($url);
             file_put_contents($filename, $data);
-        } else {
-            $data = file_get_contents($filename);
         }
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $filename);
