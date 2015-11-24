@@ -12,12 +12,16 @@ class Attendees
 
     public function getAttendees()
     {
-        $url = getenv('FILE_URL');
-        $data = file_get_contents($url);
         $dir = sys_get_temp_dir();
         $filename = $dir.'/tmp.xls';
-        file_put_contents($filename, $data);
-        $finfo = finfo_open(FILEINFO_MIME_TYPE); 
+        if (file_exists($filename) && time() - filemtime($filename) > 60) {
+            $url = getenv('FILE_URL');
+            $data = file_get_contents($url);
+            file_put_contents($filename, $data);
+        } else {
+            $data = file_get_contents($filename);
+        }
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $filename);
         finfo_close($finfo);
         if ($mime_type == 'text/plain') {
@@ -126,5 +130,4 @@ class Attendees
         return $stats;
 
     }
-
 }
