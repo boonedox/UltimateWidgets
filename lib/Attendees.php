@@ -37,6 +37,14 @@ class Attendees
         }
         $stats['last_update'] = date('M jS, g:ia', $stats['last_update_ts']);
         $stats['last_refresh'] = date('M jS, g:ia');
+        $sorter = function ($a, $b) {
+            $a = array_pop(explode(' ', $a));
+            $b = array_pop(explode(' ', $b));
+            return strcmp($a, $b);
+        };
+        usort($stats['people']['pending'], $sorter);
+        usort($stats['people']['accepted'], $sorter);
+        usort($stats['people']['declined'], $sorter);
         $stats['people']['total'] = max(
             count($stats['people']['accepted']),
             count($stats['people']['maybe']),
