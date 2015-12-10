@@ -101,7 +101,7 @@ class Attendees
                     $response = null;
                     break;
             }
-            if (!is_null($response)) {
+            if (!is_null($response) && (!is_array($stats['people'][$response]) || !in_array($name, $stats['people'][$response]))) {
                 $stats['people'][$response][] = $name;
                 $stats[$response]++;
                 $stats['total']++;
