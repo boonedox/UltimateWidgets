@@ -33,9 +33,14 @@ class Attendees
         if (empty($_GET['debug']) && $last_update_ts < strtotime(date('Y-m-d'))) {
             //$this->logger->addDebug('last update is more than a day old, returning empty data');
             $stats = $this->getDefaultStats();
-            $stats['last_update'] = date('M jS, g:ia', $last_update_ts);
+            if (empty($last_update_ts)) {
+                $stats['last_update'] = 'n/a';
+            } else {
+                $stats['last_update'] = date('M jS, g:ia', $last_update_ts);
+            }
+        } else {
+            $stats['last_update'] = date('M jS, g:ia', $stats['last_update_ts']);
         }
-        $stats['last_update'] = date('M jS, g:ia', $stats['last_update_ts']);
         $stats['last_refresh'] = date('M jS, g:ia');
         $sorter = function ($a, $b) {
             $a = array_pop(explode(' ', $a));
