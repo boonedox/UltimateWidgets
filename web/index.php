@@ -14,6 +14,10 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 $app['monolog']->addDebug('remoteip: '.getenv('HTTP_X_FORWARDED_FOR'));
 
 // Our web handlers
+$app->get('/favicon.ico', function () use ($app) {
+    //$app['monolog']->addDebug('logging output.');
+    return file_get_contents('../favicon.ico');
+});
 
 $app->get('/ultimate', function () use ($app) {
     //$app['monolog']->addDebug('logging output.');
