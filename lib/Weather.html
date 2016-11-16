@@ -75,9 +75,18 @@
             var gt_weather_set = false;
             var record_high = null;
             var record_low = null;
-            if (typeof almanac.temp_high != "undefined") {
+            if (almanac.temp_high &&
+                almanac.temp_high.record &&
+                almanac.temp_high.record.F &&
+                almanac.temp_low &&
+                almanac.temp_low.record &&
+                almanac.temp_low.F
+            ) {
                 record_high = parseInt(almanac.temp_high.record.F);
                 record_low = parseInt(almanac.temp_low.record.F);
+            } else {
+                record_high = 0;
+                record_low = 100;
             }
             var wind_max = 28;
             for (var i = 0; i < weather_data.hourly_forecast.length; i++) {
@@ -94,7 +103,7 @@
                 }
                 if (i < 13) {
                     record_high = Math.max(record_high, parseInt(hour.temp.english));
-                    //record_low = Math.min(record_low, parseInt(hour.temp.english));
+                    record_low = Math.min(record_low, parseInt(hour.temp.english));
                     chart_data[chart_data.length] = [
                         hour.FCTTIME.civil,
                         parseInt(hour.temp.english),
@@ -105,6 +114,8 @@
                     wind_max = Math.max(wind_max, hour.wspd.english);
                 }
             }
+            record_high += 5;
+            record_low -= 5;
             //var data = google.visualization.arrayToDataTable(chart_data);
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Hour');
