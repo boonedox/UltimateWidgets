@@ -29,6 +29,11 @@ class Attendees
         } else {
             $stats = $this->getAttendeesFromExcel($filename);
         }
+        $stats['accepted']++;
+        $stats['people']['accepted'][] = 'Jeremiah Johnson';
+        $idx = array_search('Jeremiah Johnson', $stats['people']['pending']);
+        unset($stats['people']['pending'][$idx]);
+        $stats['people']['pending'] = array_values($stats['people']['pending']);
         $last_update_ts = $stats['last_update_ts'];
         if (empty($_GET['debug']) && $last_update_ts < strtotime(date('Y-m-d'))) {
             //$this->logger->addDebug('last update is more than a day old, returning empty data');
