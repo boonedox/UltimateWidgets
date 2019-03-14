@@ -49,17 +49,16 @@ $app->get('/weather_data', function () use ($app) {
     $hourly_data->hourly_forecast = $hourly_data->hourly->data;
     $gametime_forecast_date = null;
     $icon_map = array(
-        //"partly-cloudy-day" => "partlycloudy"
-       "clear-day" => "clear",
-       "clear-night" => "clear",
+       "clear-day" => "clear-day",
+       "clear-night" => "clear-night",
        "rain" => "rain",
        "snow" => "snow",
        "sleet" => "sleet",
-       "wind" => "clear",
+       "wind" => "wind",
        "fog" => "fog",
        "cloudy" => "cloudy",
-       "partly-cloudy-day" => "partlycloudy",
-       "partly-cloudy-night" => "partlycloudy",
+       "partly-cloudy-day" => "partly-cloudy-day",
+       "partly-cloudy-night" => "partly-cloudy-night",
     );
     $almanac = array(
         "temp_high" => array(
