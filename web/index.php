@@ -23,9 +23,6 @@ $app->get('/ultimate', function () use ($app) {
     //$app['monolog']->addDebug('logging output.');
     return file_get_contents('../lib/Attendees2.html');
 });
-$app->get('/fetch', function () use ($app) {
-    return file_get_contents('http://sforce.alpha.dev.insidesales.com/do=noauth/atomConfigOption?configKey=Salesforce%3ASimpleSeek&organization_id=00D1a000000ZiE7&token=0051a000000vEjSAAUQOkK8r9UNOXOrLr6MdUrH2tlOvgvfV3LsRyqufNUulItQ0Ql3hwjsAfPtbWEFI5r8oJWpSKtepcRjgavVLXLVnYxOMevBRWYSu8dk4MiGCTPv6');
-});
 $app->get('/ip', function () use ($app) {
     $ret = "YOUR IP: ".getenv('HTTP_X_FORWARDED_FOR');
     $ip = null;
@@ -49,17 +46,60 @@ $app->get('/', function () use ($app) {
 $app->get('/weather_data', function () use ($app) {
     $w = new uw\Weather($app['monolog']);
     $hourly_data = json_decode($w->getHourlyWeatherForZip($_GET['zip']));
+    $hourly_data->hourly_forecast = $hourly_data->hourly->data;
     $gametime_forecast_date = null;
-    foreach ($hourly_data->hourly_forecast as $hour) {
-        if ($hour->FCTTIME->hour == '12') {
-            $gametime_forecast_date = date('l, M jS', strtotime($hour->FCTTIME->pretty)) . ', 12pm';
-            break;
+    $icon_map = array(
+        //"partly-cloudy-day" => "partlycloudy"
+       "clear-day" => "clear",
+       "clear-night" => "clear",
+       "rain" => "rain",
+       "snow" => "snow",
+       "sleet" => "sleet",
+       "wind" => "clear",
+       "fog" => "fog",
+       "cloudy" => "cloudy",
+       "partly-cloudy-day" => "partlycloudy",
+       "partly-cloudy-night" => "partlycloudy",
+    );
+    $almanac = array(
+        "temp_high" => array(
+            "record" => array("F" => 0),
+            "F" => true
+        ),
+        "temp_low" => array(
+            "record" => array("F" => 100),
+            "F" => true
+        ),
+    );
+    foreach ($hourly_data->hourly_forecast as &$hour) {
+        if (isset($icon_map[$hour->icon])) {
+            $hour->icon_url = "/images/black/".$icon_map[$hour->icon].".png";
+        } else {
+            $hour->icon_url = "/images/black/unknown.png";
+        }
+        $h = date('H', $hour->time);
+        $hour->FCTTIME = new stdClass();
+        $hour->temp = new stdClass();
+        $hour->feelslike = new stdClass();
+        $hour->wspd = new stdClass();
+        $hour->FCTTIME->hour = $h;
+        $hour->FCTTIME->civil = date('g:i A', $hour->time);
+        $hour->condition = $hour->summary;
+        $hour->temp->english = $hour->temperature;
+        $almanac["temp_high"]["record"]["F"] = max($almanac["temp_high"]["record"]["F"], $hour->temperature+20);
+        $almanac["temp_low"]["record"]["F"] = min($almanac["temp_high"]["record"]["F"], $hour->temperature-20);
+        $hour->feelslike->english = $hour->apparentTemperature;
+        $hour->wspd->english = $hour->windSpeed;
+        $hour->pop = $hour->precipProbability*100;
+
+        if ($h == '12' && is_null($gametime_forecast_date)) {
+            $gametime_forecast_date = date('l, M jS', $hour->time) . ', 12pm';
         }
     }
-    $record_data = json_decode($w->getRecordWeatherForZip($_GET['zip']));
+    //$record_data = json_decode($w->getRecordWeatherForZip($_GET['zip']));
     $ret = array(
         'hourly' => $hourly_data,
-        'record' => $record_data,
+        'record' => array('almanac' => $almanac),
         'last_refresh' => date('M jS, g:i:s a'),
         'gametime_forecast_date' => $gametime_forecast_date
     );

@@ -18,7 +18,9 @@ class Weather
         $filename = sys_get_temp_dir().'/weather'.$zip;
         if ($_GET['force'] || !file_exists($filename) || time() - filemtime($filename) > 600) {
             //$this->logger->addDebug('fetching hourly data');
-            $url = "http://api.wunderground.com/api/{$this->api_key}/hourly/q/{$zip}.json";
+            //$url = "http://api.wunderground.com/api/{$this->api_key}/hourly/q/{$zip}.json";
+            $url = "https://api.darksky.net/forecast/{$this->api_key}/40.233841,-111.65853";
+            $data = file_get_contents($url);
             file_put_contents($filename, file_get_contents($url));
         } else {
             //$this->logger->addDebug('hourly data is cached, no need to fetch');

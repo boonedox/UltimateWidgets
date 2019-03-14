@@ -1,0 +1,207 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <title id="page_title">Novell Ultimate</title>
+  <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['gauge']}]}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://code.angularjs.org/1.1.5/angular.js"></script>
+    <style>
+    th {
+        font-size: 12pt;
+        padding: 8px;
+    }
+    td {
+        padding-left: 8px;
+    }
+    td.accepted {
+        color: green;
+    }
+    td.maybe {
+        color: rgb(181, 119, 5);
+    }
+    td.declined {
+        color: red;
+    }
+    #hor-minimalist-a {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+        width: 600px;
+        padding: 8px;
+        border: 1px dotted grey;
+        text-align: left;
+        background-color: #f5f5f5;
+        margin: 20px;
+    }
+    body {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+    }
+
+.animate-enter, 
+.animate-leave
+{ 
+    -webkit-transition: 400ms cubic-bezier(0.420, 0.000, 0.580, 1.000) all;
+    -moz-transition: 400ms cubic-bezier(0.420, 0.000, 0.580, 1.000) all;
+    -ms-transition: 400ms cubic-bezier(0.420, 0.000, 0.580, 1.000) all;
+    -o-transition: 400ms cubic-bezier(0.420, 0.000, 0.580, 1.000) all;
+    transition: 400ms cubic-bezier(0.420, 0.000, 0.580, 1.000) all;
+    position: relative;
+    display: block;
+} 
+ 
+.animate-enter.animate-enter-active, 
+.animate-leave {
+    opacity: 1;
+    left: 0;
+    height: 30px;
+}
+ 
+.animate-leave.animate-leave-active,
+.animate-enter {
+    opacity: 0;
+    left: -50px;
+    height: 0px;
+}
+    </style>
+</head>
+<body>
+<a target="_blank" href="#">Open in new window</a>
+<center>
+<div ng-controller="customersCtrl"> 
+
+<div id="chart_div" style="width: 400px; height: 120px;"></div>
+<div id="maybe_chart_div" style="width: 400px; height: 120px;position: relative; top: -120px; opacity: .2;"></div>
+<div id="count_div" style="width: 83px; height: 50px;position: relative; top: -32px; line-height: 7px;font-size: 30pt;background-color: #f7f7f7; z-index: 1"></div>
+<div id="table_div" style="position: relative; top: 12px">
+<br><b>Last calendar update</b>: <i>{{last_update}}</i>, 
+<b>&nbsp;&nbsp;&nbsp;Last refresh</b>: <i>{{last_refresh}}</i><br>
+<table cellspacing=2 id="hor-minimalist-a" >
+    <thead>
+        <tr>
+            <th scope="col">Accepted</th>
+            <th scope="col">Tentative</th>
+            <th scope="col">Declined</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="vertical-align: top">
+            <td class="accepted">
+                <ul class="nav nav-pills nav-stacked">
+                    <li ng-animate="'animate'" ng-repeat="x in people.accepted"> {{x}} </li>
+                </ul>
+            </td>
+            <td class="maybe">
+                <ul class="nav nav-pills nav-stacked">
+                    <li ng-animate="'animate'" ng-repeat="x in people.maybe"> {{x}} </li>
+                </ul>
+            </td>
+            <td class="declined">
+                <ul class="nav nav-pills nav-stacked">
+                    <li ng-animate="'animate'" ng-repeat="x in people.declined"> {{x}} </li>
+                </ul>
+            </td>
+        </tr>
+         <tr><td colspan="3" align="center"><i>Waiting for response: <b>{{pending}}</b></i></td></tr>
+    </tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+//Angular code (used for table)
+var app = angular.module('myApp', []);
+app.controller('customersCtrl', function($scope, $http, $timeout) {
+    var loadData = function() {
+        var h = (new Date).getHours();
+        if (h < 6 || h > 20) {
+            // don't auto-refresh between 10pm and 6am
+            $timeout(loadData, 300000);
+            return;
+        }
+        $http.get("/ultimate_data")
+            .then(function (response) {
+                if (!response || response == null) {
+                    response = {
+                        accepted: 0,
+                        maybe: 0,
+                        declined: 0,
+                        people: {
+                            accepted: [],
+                            maybe: [],
+                            declined: []
+                        },
+                        last_update: 'n/a',
+                        last_refresh: 'n/a'
+                    };
+                } else {
+                    response = response.data;
+                }
+                $scope.people = response.people;
+                $scope.pending = response.pending;
+                $scope.last_refresh = response.last_refresh;
+                $scope.last_update = response.last_update;
+                $timeout(loadData, 30 * 1000);
+                drawChart(response.accepted, response.maybe);
+        });
+    }
+    loadData();
+});
+
+//Guage code
+//google.load("visualization", "1", {packages:["gauge"]});
+var guage_chart;
+var maybe_guage_chart;
+$(document).ready(function() {
+    guage_chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+    maybe_guage_chart = new google.visualization.Gauge(document.getElementById('maybe_chart_div'));
+    drawChart(0, 0);
+});
+function drawChart(accepted, maybe) {
+
+    var data = google.visualization.arrayToDataTable([
+        ['Label', 'Value'],
+        ['Accepted', accepted]
+    ]);
+    var maybe_data = google.visualization.arrayToDataTable([
+        ['Label', 'Value'],
+        ['', maybe + accepted]
+    ]);
+
+    var options = {
+        width: 300, height: 300,
+        redFrom: 0, redTo: 4,
+        yellowFrom:4, yellowTo: 6,
+        greenFrom:6, greenTo: 20,
+        max: 20,
+        min: 0,
+        animation: {
+            easing: 'inAndOut',
+            duration: 500
+        }
+    };
+
+    var html = accepted;
+    if (maybe > 0) {
+        $('#count_div').css('top', '-23px');
+        $('#count_div').css('height', '40px');
+        html +=  "<span style='font-size: 7pt'><br>("+maybe+" maybe)";
+    } else {
+        $('#count_div').css('top', '-14px');
+        $('#count_div').css('height', '24px');
+    }
+    $('#count_div').html(html);
+
+    guage_chart.draw(data, options);
+    maybe_guage_chart.draw(maybe_data, options);
+}
+</script>
+    <!--
+    <iframe src="http://localhost:9000/" height="600" width="600" frameborder="0" style="overflow: hidden" scrolling="no" seamless="seamless"></iframe>
+    -->
+    <iframe src="https://nameless-garden-8402.herokuapp.com/" height="600" width="600" frameborder="0" style="overflow: hidden" scrolling="no" seamless="seamless"></iframe>
+</center>
+</body>
+</html>
