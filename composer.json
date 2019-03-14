@@ -1,5 +1,6 @@
 {
   "require" : {
+    "php": "^7.0",
     "silex/silex": "~1.1",
     "monolog/monolog": "~1.7",
     "phpoffice/phpexcel": "dev-master"
